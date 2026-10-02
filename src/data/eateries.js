@@ -2,7 +2,7 @@ export const eateries = [
     {
         id: 1,
         slug: "jollibee-vega",
-        name: "Jollibee Vega",
+        name: "Jollibee",
         branch: "Vega",
         chain: "Jollibee",
         area: "Vega",
@@ -12,7 +12,7 @@ export const eateries = [
     {
         id: 2,
         slug: "mcdo-vega",
-        name: "McDonald's Vega",
+        name: "McDonald's",
         branch: "Vega",
         chain: "McDonald's",
         area: "Vega",
@@ -32,7 +32,7 @@ export const eateries = [
     {
         id: 4,
         slug: "chowking-vega",
-        name: "Chowking Vega",
+        name: "Chowking",
         branch: "Vega",
         chain: "Chowking",
         area: "Vega",
