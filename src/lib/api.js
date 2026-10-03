@@ -1,15 +1,34 @@
 import { eateries } from "../data/eateries";
-import { reviews } from "../data/reviews";
 import { supabase } from "./supabase";
 
 export async function getReviewsByEateryId(eateryId) {
-  return reviews.filter((r) => r.eatery_id === eateryId);
+  const { data, error } = await supabase
+    .from("public_reviews")
+    .select("*")
+    .eq("eatery_id", eateryId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data;
 }
 
 export async function getRecentReviews(limit = 6) {
-  return [...reviews]
-    .sort((a, b) => b.created_at.localeCompare(a.created_at))
-    .slice(0, limit);
+  const { data, error } = await supabase
+    .from("public_reviews")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (error) throw error;
+  return data;
+}
+
+export async function upsertReview({ eateryId, userId, rating, body }) {
+  const { error } = await supabase
+    .from("reviews")
+    .upsert(
+      { eatery_id: eateryId, user_id: userId, rating, body },
+      { onConflict: "eatery_id,user_id" }
+    );
+  if (error) throw error;
 }
 
 export async function getEateries() {

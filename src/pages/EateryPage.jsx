@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getEateries, getEateryBySlug, getReviewsByEateryId } from "../lib/api";
 import ReviewList from "../components/ReviewList";
 import ReviewForm from "../components/ReviewForm";
 import LoginForm from "../components/LoginForm";
@@ -9,7 +8,13 @@ import Meta from "../components/Meta";
 import useUser from "../lib/useUser";
 import { getAverage, getDistribution } from "../lib/ratings";
 import NicknameForm from "../components/NicknameForm";
-import { getMyProfile } from "../lib/api";
+import {
+  getEateries,
+  getEateryBySlug,
+  getReviewsByEateryId,
+  getMyProfile,
+  upsertReview,
+} from "../lib/api";
 
 const label = (e) => (e.branch ? `${e.name} ${e.branch}` : e.name);
 
@@ -79,16 +84,19 @@ export default function EateryPage() {
     .filter((e) => e.area === eatery.area && !branches.includes(e))
     .slice(0, 6);
 
-  function handleAddReview({ rating, body }) {
-    const newReview = {
-      id: Date.now(),
-      eatery_id: eatery.id,
-      nickname: nickname,
+  async function handleAddReview({ rating, body }) {
+  try {
+    await upsertReview({
+      eateryId: eatery.id,
+      userId: user.id,
       rating,
       body,
-      created_at: new Date().toISOString().slice(0, 10),
-    };
-    setReviews((prev) => [newReview, ...prev]);
+    });
+    setReviews(await getReviewsByEateryId(eatery.id));
+  } catch (err) {
+    console.error(err);
+    alert("Couldn't save your review. Try again.");
+  }
   }
 
   const MiniRow = ({ items }) => (
