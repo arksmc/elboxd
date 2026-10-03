@@ -5,24 +5,52 @@ import ReviewList from "../components/ReviewList";
 import StarRating from "../components/StarRating";
 import { getAverage } from "../lib/ratings";
 import ReviewForm from "../components/ReviewForm";
+import useUser from "../lib/useUser";
+import LoginForm from "../components/LoginForm";
+import Meta from "../components/Meta";
+import useUser from "../lib/useUser";
+import { signOut } from "../lib/api";
+
+const { user } = useUser();
+
+{user && <button onClick={signOut}>Sign out</button>}
 
 export default function EateryPage() {
   const { slug } = useParams();
   const [eatery, setEatery] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useUser();
 
   useEffect(() => {
-    setLoading(true);
-    getEateryBySlug(slug).then((data) => {
-      setEatery(data);
-      if (data) {
-        getReviewsByEateryId(data.id).then(setReviews);
-      } else {
-        setReviews([]);
+    let isMounted = true;
+
+    async function loadData() {
+      setLoading(true);
+      try {
+        const eateryData = await getEateryBySlug(slug);
+        if (!isMounted) return;
+
+        setEatery(eateryData);
+
+        if (eateryData) {
+          const reviewsData = await getReviewsByEateryId(eateryData.id);
+          if (isMounted) setReviews(reviewsData);
+        } else {
+          setReviews([]);
+        }
+      } catch (err) {
+        console.error("Failed to load eatery details:", err);
+      } finally {
+        if (isMounted) setLoading(false);
       }
-      setLoading(false);
-    });
+    }
+
+    loadData();
+
+    return () => {
+      isMounted = false;
+    };
   }, [slug]);
 
   if (loading) return <p>Loading...</p>;
@@ -32,19 +60,24 @@ export default function EateryPage() {
   const average = getAverage(reviews);
 
   function handleAddReview({ rating, body }) {
-  const newReview = {
-    id: Date.now(),
-    eatery_id: eatery.id,
-    nickname: "you",
-    rating,
-    body,
-    created_at: new Date().toISOString().slice(0, 10),
-  };
-  setReviews([newReview, ...reviews]);
-}
+    const newReview = {
+      id: Date.now(),
+      eatery_id: eatery.id,
+      nickname: user?.nickname || "you",
+      rating,
+      body,
+      created_at: new Date().toISOString().slice(0, 10),
+    };
+    
+    // Optimistic UI update
+    setReviews((prev) => [newReview, ...prev]);
+
+    // TODO: Send backend request here (e.g., await createReview(newReview))
+  }
 
   return (
     <main>
+      <Meta title={title} description={`Reviews of ${title}`} />
       <Link to="/">← All eateries</Link>
       <h1>{title}</h1>
       <p>{eatery.area} · {eatery.category}</p>
@@ -57,7 +90,7 @@ export default function EateryPage() {
             <StarRating value={average} /> {average} ({reviews.length})
           </p>
         )}
-        <ReviewForm onSubmit={handleAddReview} />
+        {user ? <ReviewForm onSubmit={handleAddReview} /> : <LoginForm />}
         <ReviewList reviews={reviews} />
       </section>
     </main>

@@ -1,5 +1,6 @@
 import { eateries } from "../data/eateries";
 import { reviews } from "../data/reviews";
+import { supabase } from "./supabase";
 
 export async function getReviewsByEateryId(eateryId) {
   return reviews.filter((r) => r.eatery_id === eateryId);
@@ -11,4 +12,17 @@ export async function getEateries() {
 
 export async function getEateryBySlug(slug) {
     return eateries.find((e) => e.slug === slug) ?? null;
+}
+
+export async function signInWithEmail(email) {
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: window.location.origin },
+  });
+  if (error) throw error;
+}
+
+export async function signOut() {
+  const { error } = await supabase.auth.signOut();
+  if (error) throw error;
 }
