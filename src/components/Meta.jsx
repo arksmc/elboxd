@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 export default function Meta({ title, description }) {
   useEffect(() => {
-    document.title = title ? `${title} | UPLB Eats` : "UPLB Eats";
+    document.title = title ? `${title} | Elboxd` : "Elboxd";
     let tag = document.querySelector('meta[name="description"]');
     if (!tag) {
       tag = document.createElement("meta");

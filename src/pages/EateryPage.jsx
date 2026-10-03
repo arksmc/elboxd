@@ -1,41 +1,39 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getEateryBySlug, getReviewsByEateryId } from "../lib/api";
+import { getEateries, getEateryBySlug, getReviewsByEateryId } from "../lib/api";
 import ReviewList from "../components/ReviewList";
-import StarRating from "../components/StarRating";
-import { getAverage } from "../lib/ratings";
 import ReviewForm from "../components/ReviewForm";
-import useUser from "../lib/useUser";
 import LoginForm from "../components/LoginForm";
+import StarRating from "../components/StarRating";
 import Meta from "../components/Meta";
 import useUser from "../lib/useUser";
-import { signOut } from "../lib/api";
+import { getAverage, getDistribution } from "../lib/ratings";
 
-const { user } = useUser();
-
-{user && <button onClick={signOut}>Sign out</button>}
+const label = (e) => (e.branch ? `${e.name} ${e.branch}` : e.name);
 
 export default function EateryPage() {
   const { slug } = useParams();
+  const { user } = useUser();
   const [eatery, setEatery] = useState(null);
+  const [all, setAll] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useUser();
 
   useEffect(() => {
     let isMounted = true;
-
     async function loadData() {
       setLoading(true);
       try {
-        const eateryData = await getEateryBySlug(slug);
+        const [eateryData, allData] = await Promise.all([
+          getEateryBySlug(slug),
+          getEateries(),
+        ]);
         if (!isMounted) return;
-
         setEatery(eateryData);
-
+        setAll(allData);
         if (eateryData) {
-          const reviewsData = await getReviewsByEateryId(eateryData.id);
-          if (isMounted) setReviews(reviewsData);
+          const r = await getReviewsByEateryId(eateryData.id);
+          if (isMounted) setReviews(r);
         } else {
           setReviews([]);
         }
@@ -45,54 +43,118 @@ export default function EateryPage() {
         if (isMounted) setLoading(false);
       }
     }
-
     loadData();
-
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, [slug]);
 
   if (loading) return <p>Loading...</p>;
-  if (!eatery) return <p>Eatery not found. <Link to="/">Back home</Link></p>;
+  if (!eatery) return <p>Eatery not found. <Link to="/" className="back">Back home</Link></p>;
 
-  const title = eatery.branch ? `${eatery.name} ${eatery.branch}` : eatery.name;
+  const title = label(eatery);
   const average = getAverage(reviews);
+  const dist = getDistribution(reviews);
+  const max = Math.max(1, ...Object.values(dist));
+
+  const others = all.filter((e) => e.id !== eatery.id);
+  const branches = others.filter((e) => e.chain && e.chain === eatery.chain);
+  const nearby = others
+    .filter((e) => e.area === eatery.area && !branches.includes(e))
+    .slice(0, 6);
 
   function handleAddReview({ rating, body }) {
     const newReview = {
       id: Date.now(),
       eatery_id: eatery.id,
-      nickname: user?.nickname || "you",
+      nickname: "you",
       rating,
       body,
       created_at: new Date().toISOString().slice(0, 10),
     };
-    
-    // Optimistic UI update
     setReviews((prev) => [newReview, ...prev]);
-
-    // TODO: Send backend request here (e.g., await createReview(newReview))
   }
+
+  const MiniRow = ({ items }) => (
+    <div className="row6">
+      {items.map((e) => (
+        <Link key={e.id} to={`/eatery/${e.slug}`} className="mini">
+          <div className="tile">{e.name[0]}</div>
+          <strong>{label(e)}</strong>
+          <small className="muted">{e.area}</small>
+        </Link>
+      ))}
+    </div>
+  );
 
   return (
     <main>
       <Meta title={title} description={`Reviews of ${title}`} />
-      <Link to="/">← All eateries</Link>
-      <h1>{title}</h1>
-      <p>{eatery.area} · {eatery.category}</p>
-      {eatery.status !== "open" && <p>This place is currently closed.</p>}
+      <div className="banner-hero" />
 
-      <section>
-        <h2>Reviews</h2>
-        {average && (
-          <p>
-            <StarRating value={average} /> {average} ({reviews.length})
-          </p>
-        )}
-        {user ? <ReviewForm onSubmit={handleAddReview} /> : <LoginForm />}
-        <ReviewList reviews={reviews} />
-      </section>
+      <div className="detail">
+        <aside className="detail-side">
+          <div className="tile tile-lg">{eatery.name[0]}</div>
+          <div className="stats">
+            <span><b>{average ?? "–"}</b> avg</span>
+            <span><b>{reviews.length}</b> reviews</span>
+          </div>
+          <div className="side-box">
+            <p className="muted">{eatery.area} · {eatery.category}</p>
+            {eatery.status !== "open" && <p className="notice">Currently closed</p>}
+            <a href="#write" className="pill block">Write a review</a>
+            <button className="btn-disabled" disabled>Want to try (soon)</button>
+          </div>
+        </aside>
+
+        <div className="detail-main">
+          <Link to="/" className="back">← All eateries</Link>
+          <h1>{title}</h1>
+          <div className="pills">
+            <span className="tag">{eatery.area}</span>
+            <span className="tag">{eatery.category}</span>
+          </div>
+
+          <div className="rating-panel">
+            <div className="big-score">
+              {average ?? "–"}
+              {average && <StarRating value={average} />}
+            </div>
+            <div className="hist">
+              {[5, 4, 3, 2, 1].map((n) => (
+                <div key={n} className="hist-row">
+                  <span>{n}★</span>
+                  <div className="hist-bar">
+                    <i style={{ width: `${(dist[n] / max) * 100}%` }} />
+                  </div>
+                  <span>{dist[n]}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="section-head" id="write"><h2>Your review</h2></div>
+          {user ? <ReviewForm onSubmit={handleAddReview} /> : <LoginForm />}
+
+          <div className="section-head"><h2>Recent reviews</h2></div>
+          <ReviewList reviews={reviews} />
+
+          {branches.length > 0 && (
+            <>
+              <div className="section-head"><h2>Other branches</h2></div>
+              <MiniRow items={branches} />
+            </>
+          )}
+
+          {nearby.length > 0 && (
+            <>
+              <div className="section-head"><h2>Also in {eatery.area}</h2></div>
+              <MiniRow items={nearby} />
+            </>
+          )}
+
+          <div className="section-head"><h2>Popular lists</h2></div>
+          <div className="banner">Lists are coming soon.</div>
+        </div>
+      </div>
     </main>
   );
 }

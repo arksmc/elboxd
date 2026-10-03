@@ -19,7 +19,7 @@ export default function ReviewForm({ onSubmit }) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="form">
       <h3>Write a review</h3>
       <StarPicker value={rating} onChange={setRating} />
       <textarea
@@ -28,8 +28,10 @@ export default function ReviewForm({ onSubmit }) {
         onChange={(e) => setBody(e.target.value)}
         maxLength={1000}
       />
-      {error && <p>{error}</p>}
-      <button type="submit">Post review</button>
+      {error && <p className="error">{error}</p>}
+      <button type="submit" className="btn">
+        Post review
+      </button>
     </form>
   );
 }

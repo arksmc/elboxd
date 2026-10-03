@@ -6,6 +6,12 @@ export async function getReviewsByEateryId(eateryId) {
   return reviews.filter((r) => r.eatery_id === eateryId);
 }
 
+export async function getRecentReviews(limit = 6) {
+  return [...reviews]
+    .sort((a, b) => b.created_at.localeCompare(a.created_at))
+    .slice(0, limit);
+}
+
 export async function getEateries() {
     return eateries;
 }
