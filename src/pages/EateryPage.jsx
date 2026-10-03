@@ -8,12 +8,30 @@ import StarRating from "../components/StarRating";
 import Meta from "../components/Meta";
 import useUser from "../lib/useUser";
 import { getAverage, getDistribution } from "../lib/ratings";
+import NicknameForm from "../components/NicknameForm";
+import { getMyProfile } from "../lib/api";
 
 const label = (e) => (e.branch ? `${e.name} ${e.branch}` : e.name);
 
 export default function EateryPage() {
   const { slug } = useParams();
   const { user } = useUser();
+  const [nickname, setNickname] = useState(null);
+  const [profileLoaded, setProfileLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!user) {
+      setNickname(null);
+      setProfileLoaded(true);
+      return;
+    }
+    setProfileLoaded(false);
+    getMyProfile(user.id).then((p) => {
+      setNickname(p?.nickname ?? null);
+      setProfileLoaded(true);
+    });
+  }, [user]);
+
   const [eatery, setEatery] = useState(null);
   const [all, setAll] = useState([]);
   const [reviews, setReviews] = useState([]);
@@ -65,7 +83,7 @@ export default function EateryPage() {
     const newReview = {
       id: Date.now(),
       eatery_id: eatery.id,
-      nickname: "you",
+      nickname: nickname,
       rating,
       body,
       created_at: new Date().toISOString().slice(0, 10),
@@ -132,7 +150,15 @@ export default function EateryPage() {
           </div>
 
           <div className="section-head" id="write"><h2>Your review</h2></div>
-          {user ? <ReviewForm onSubmit={handleAddReview} /> : <LoginForm />}
+          {!user ? (
+            <LoginForm />
+          ) : !profileLoaded ? (
+            <p className="muted">Loading...</p>
+          ) : !nickname ? (
+            <NicknameForm userId={user.id} onDone={setNickname} />
+          ) : (
+            <ReviewForm onSubmit={handleAddReview} />
+          )}
 
           <div className="section-head"><h2>Recent reviews</h2></div>
           <ReviewList reviews={reviews} />

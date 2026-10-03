@@ -32,3 +32,21 @@ export async function signOut() {
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
 }
+
+export async function getMyProfile(userId) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("nickname")
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+export async function createProfile(userId, nickname) {
+  const { error } = await supabase
+    .from("profiles")
+    .insert({ user_id: userId, nickname });
+  if (error) throw error;
+}
+
