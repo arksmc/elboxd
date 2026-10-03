@@ -5,6 +5,7 @@ import EateryCard from "../components/EateryCard";
 import SearchBar from "../components/SearchBar";
 import StarRating from "../components/StarRating";
 import Meta from "../components/Meta";
+import { formatDate } from "../lib/format";
 
 const label = (e) => (e.branch ? `${e.name} ${e.branch}` : e.name);
 
@@ -44,7 +45,7 @@ export default function Home() {
       ) : (
         <>
           <div className="section-head" id="reviews">
-            <h2>Recent reviews</h2>
+            <h2>Your Recent reviews</h2>
           </div>
           <div className="row6">
             {reviews.map((r) => {
@@ -54,7 +55,7 @@ export default function Home() {
                   <div className="tile">{e.name[0]}</div>
                   <strong>{label(e)}</strong>
                   <StarRating value={r.rating} />
-                  <small className="muted">{r.nickname} · {r.created_at}</small>
+                  <small className="muted">{r.nickname} · {formatDate(r.created_at)}</small>
                 </Link>
               );
             })}

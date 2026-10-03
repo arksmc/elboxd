@@ -1,4 +1,5 @@
 import StarRating from "./StarRating";
+import { formatDate } from "../lib/format";
 
 export default function ReviewList({ reviews }) {
   if (!reviews.length) return <p className="banner">No reviews yet. Be the first to review!</p>;
@@ -11,7 +12,7 @@ export default function ReviewList({ reviews }) {
           <StarRating value={r.rating} />
         </div>
         <p>{r.body}</p>
-        <small className="muted">{r.created_at}</small>
+        <small className="muted">{formatDate(r.created_at)}</small>
       </li>
     ))}
   </ul>
