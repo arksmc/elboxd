@@ -77,3 +77,13 @@ left join profiles p on p.user_id = r.user_id
 where r.hidden = false;
 
 grant select on public_reviews to anon, authenticated;
+
+create view eatery_stats as
+select
+  eatery_id,
+  count(*)::int as review_count,
+  round(avg(rating)::numeric, 1)::float as avg_rating
+from public_reviews
+group by eatery_id;
+
+grant select on eatery_stats to anon, authenticated;

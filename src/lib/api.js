@@ -69,3 +69,9 @@ export async function createProfile(userId, nickname) {
   if (error) throw error;
 }
 
+export async function getEateryStats() {
+  const { data, error } = await supabase.from("eatery_stats").select("*");
+  if (error) throw error;
+  return Object.fromEntries(data.map((s) => [s.eatery_id, s]));
+}
+

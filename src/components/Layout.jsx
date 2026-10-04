@@ -11,12 +11,12 @@ export default function Layout({ children }) {
           <div className="dots"><i /><i /><i /></div>
           <Link to="/" className="brand">Elboxd</Link>
           <nav className="nav">
-            <NavLink to="/">Eateries</NavLink>
+            <NavLink to="/eateries">Eateries</NavLink>
             <a href="/#reviews">Reviews</a>
             <a href="/#lists">Lists</a>
           </nav>
           {user && <button className="link-btn" onClick={signOut}>Sign out</button>}
-          <Link to="/" className="pill">+ REVIEW</Link>
+          <Link to="/eateries" className="pill">+ REVIEW</Link>
         </div>
       </header>
       <div className="container">{children}</div>
