@@ -45,7 +45,7 @@ export default function Home() {
       ) : (
         <>
           <div className="section-head" id="reviews">
-            <h2>Your Recent reviews</h2>
+            <h2>Recent reviews</h2>
           </div>
           <div className="row6">
             {reviews.map((r) => {
