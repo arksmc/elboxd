@@ -1,4 +1,3 @@
-import { eateries } from "../data/eateries";
 import { supabase } from "./supabase";
 
 export async function getReviewsByEateryId(eateryId) {
@@ -32,11 +31,22 @@ export async function upsertReview({ eateryId, userId, rating, body }) {
 }
 
 export async function getEateries() {
-    return eateries;
+  const { data, error } = await supabase
+    .from("eateries")
+    .select("*")
+    .order("name");
+  if (error) throw error;
+  return data;
 }
 
 export async function getEateryBySlug(slug) {
-    return eateries.find((e) => e.slug === slug) ?? null;
+  const { data, error } = await supabase
+    .from("eateries")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
 }
 
 export async function signInWithEmail(email) {

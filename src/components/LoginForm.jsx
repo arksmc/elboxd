@@ -17,11 +17,15 @@ export default function LoginForm() {
     }
   }
 
-  if (status === "sent") return <p>Check your email for the sign-in link.</p>;
+  if (status === "sent") return <p className="error">Check your email for the sign-in link.</p>;
 
   return (
-    <form onSubmit={handleSubmit}>
-      <p>Sign in to write a review.</p>
+  <form className="form login" onSubmit={handleSubmit}>
+    <h3>Sign in to write a review</h3>
+    <p className="muted">
+      Enter your email and we'll send you a one-tap sign-in link. No password needed.
+    </p>
+    <div className="login-row">
       <input
         type="email"
         required
@@ -29,10 +33,11 @@ export default function LoginForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <button type="submit" disabled={status === "sending"}>
-        Send magic link
+      <button className="btn" type="submit" disabled={status === "sending"}>
+        {status === "sending" ? "Sending..." : "Send magic link"}
       </button>
-      {status === "error" && <p>Something went wrong. Try again.</p>}
-    </form>
-  );
+    </div>
+    {status === "error" && <p className="error">Something went wrong. Try again.</p>}
+  </form>
+);
 }
