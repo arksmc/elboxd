@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { signInWithEmail } from "../lib/api";
+import { signInWithGoogle } from "../lib/api";
+
 
 export default function LoginForm() {
   const [email, setEmail] = useState(() => localStorage.getItem("lastEmail") ?? "");
@@ -35,9 +37,9 @@ export default function LoginForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <button className="btn" type="submit" disabled={status === "sending"}>
-        {status === "sending" ? "Sending..." : "Send magic link"}
-      </button>
+      <button className="btn" type="button" onClick={signInWithGoogle}>
+  Continue with Google
+</button>
     </div>
     {status === "error" && <p className="error">Something went wrong. Try again.</p>}
   </form>

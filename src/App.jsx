@@ -18,6 +18,7 @@ export default function App() {
         <Route path="/eatery/:slug" element={<EateryPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>

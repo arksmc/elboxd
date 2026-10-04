@@ -85,3 +85,10 @@ export async function getEateryStats() {
   return Object.fromEntries(data.map((s) => [s.eatery_id, s]));
 }
 
+export async function signInWithGoogle() {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: window.location.origin },
+  });
+  if (error) throw error;
+}
