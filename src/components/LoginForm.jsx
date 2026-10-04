@@ -1,47 +1,15 @@
-import { useState } from "react";
-import { signInWithEmail } from "../lib/api";
 import { signInWithGoogle } from "../lib/api";
 
-
 export default function LoginForm() {
-  const [email, setEmail] = useState(() => localStorage.getItem("lastEmail") ?? "");
-  const [status, setStatus] = useState("idle");
-  
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setStatus("sending");
-    try {
-      localStorage.setItem("lastEmail", email);
-      await signInWithEmail(email);
-      setStatus("sent");
-    } catch (err) {
-        console.error(err);
-        setStatus("error");
-    }
-  }
-
-  if (status === "sent") return <p className="error">Check your email for the sign-in link.</p>;
-
   return (
-  <form className="form login" onSubmit={handleSubmit}>
-    <h3>Sign in to write a review</h3>
-    <p className="muted">
-      Enter your email and we'll send you a one-tap sign-in link. No password needed.
-    </p>
-    <div className="login-row">
-      <input
-        type="email"
-        required
-        placeholder="you@email.com"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+    <form className="form login" onSubmit={(e) => e.preventDefault()}>
+      <h3>Sign in to write a review</h3>
+      <p className="muted">
+        Sign in with Google to post. Your reviews show under a nickname you pick, never your name or email.
+      </p>
       <button className="btn" type="button" onClick={signInWithGoogle}>
-  Continue with Google
-</button>
-    </div>
-    {status === "error" && <p className="error">Something went wrong. Try again.</p>}
-  </form>
-);
+        Continue with Google
+      </button>
+    </form>
+  );
 }

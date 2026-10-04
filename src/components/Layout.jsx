@@ -28,8 +28,11 @@ export default function Layout({ children }) {
     <footer className="site-footer">
         <div className="footer-inner">
             <span>© Elboxd</span>
-            <span className="muted">Student-made · Reviews are anonymous</span>
-               <Link to="/privacy">Privacy</Link> · <Link to="/terms">Terms</Link>
+<span className="muted">
+  Student-made · Reviews are posted under nicknames
+  <br />
+  <Link to="/privacy">Privacy</Link> · <Link to="/terms">Terms</Link>
+</span>
         </div>
     </footer>
     </>

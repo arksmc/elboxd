@@ -6,8 +6,7 @@ import Layout from "./components/Layout";
 import Eateries from "./pages/Eateries";
 import Login from "./pages/Login";
 import Privacy from "./pages/Privacy";
-// inside <Routes>
-
+import Terms from "./pages/Terms";
 
 export default function App() {
   return (

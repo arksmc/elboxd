@@ -28,6 +28,8 @@ h2 { font-size: 1.2rem; margin: 0 0 1rem; }
 h3 { margin: 0; }
 
 .container { 
+  flex: 1; 
+  width: 100%; 
   max-width: 950px; 
   margin: 0 auto; 
   padding: 0 1rem 3rem; 
@@ -43,6 +45,8 @@ h3 { margin: 0; }
   top: 0; 
   z-index: 10; 
 }
+
+#root { min-height: 100vh; display: flex; flex-direction: column; }
 
 .header-inner {
   max-width: 950px;
@@ -238,7 +242,7 @@ html { scrollbar-gutter: stable; }
 .hist-bar { background: var(--bg); height: 8px; border-radius: 4px; overflow: hidden; }
 .hist-bar i { display: block; height: 100%; background: var(--accent); }
 
-.site-footer { background: var(--green); color: #fff; border-top: 0; }
+.site-footer { background: var(--green); color: #fff; border-top: 0; margin-top: 2rem;  }
 .footer-inner { max-width: 950px; margin: 0 auto; padding: 1.2rem 1rem; display: flex; justify-content: space-between; font-size: 0.85rem; }
 .site-footer .muted { color: rgba(255,255,255,0.75); }
 .login { gap: 0.5rem; }
