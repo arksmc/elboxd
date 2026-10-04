@@ -66,7 +66,7 @@ export default function Eateries() {
       <h1>Eateries</h1>
 
       <a className="banner" href="#">
-        Can't find your eatery? <b>Suggest an eatery →</b>
+        Can't find your eatery? <b>Suggest an eatery</b>
       </a>
 
       <SearchBar value={q} onChange={(v) => setParam("q", v)} />
