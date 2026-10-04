@@ -5,6 +5,7 @@ import NotFound from "./pages/NotFound";
 import Layout from "./components/Layout";
 import Eateries from "./pages/Eateries";
 import Login from "./pages/Login";
+import Privacy from "./pages/Privacy";
 // inside <Routes>
 
 
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/eateries" element={<Eateries />} />
         <Route path="/eatery/:slug" element={<EateryPage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/privacy" element={<Privacy />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>
