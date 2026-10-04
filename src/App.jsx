@@ -4,6 +4,7 @@ import EateryPage from "./pages/EateryPage";
 import NotFound from "./pages/NotFound";
 import Layout from "./components/Layout";
 import Eateries from "./pages/Eateries";
+import Login from "./pages/Login";
 // inside <Routes>
 
 
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/eateries" element={<Eateries />} />
         <Route path="/eatery/:slug" element={<EateryPage />} />
+        <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>

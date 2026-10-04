@@ -2,13 +2,15 @@ import { useState } from "react";
 import { signInWithEmail } from "../lib/api";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() => localStorage.getItem("lastEmail") ?? "");
   const [status, setStatus] = useState("idle");
+  
 
   async function handleSubmit(e) {
     e.preventDefault();
     setStatus("sending");
     try {
+      localStorage.setItem("lastEmail", email);
       await signInWithEmail(email);
       setStatus("sent");
     } catch (err) {

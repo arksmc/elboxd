@@ -3,7 +3,12 @@ import useUser from "../lib/useUser";
 import { signOut } from "../lib/api";
 
 export default function Layout({ children }) {
-  const { user } = useUser();
+  const { user, loading } = useUser();
+  
+{!loading && (user
+  ? <button className="link-btn" onClick={signOut}>Sign out</button>
+  : <Link to="/login" className="link-btn">Sign in</Link>)}
+  
   return (
     <>
       <header className="site-header">
