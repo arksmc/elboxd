@@ -36,7 +36,7 @@ function handleSignOut() {
           <nav className="nav">
             <NavLink to="/eateries">Eateries</NavLink>
             <NavLink to="/people">People</NavLink>
-            <a href="/#reviews">Reviews</a>
+            <NavLink to="/reviews">Reviews</NavLink>
             <a href="/#lists">Lists</a>
           </nav>
           {!loading && (user ? (

@@ -273,3 +273,18 @@ export async function searchProfiles(q, limit = 20) {
   if (error) throw error;
   return data;
 }
+
+export async function getReviewsPage({ sort = "recent", offset = 0, limit = 20 }) {
+  let query = supabase.from("public_reviews").select("*");
+  if (sort === "liked") {
+    query = query
+      .gt("like_count", 0)
+      .order("like_count", { ascending: false })
+      .order("created_at", { ascending: false });
+  } else {
+    query = query.order("created_at", { ascending: false });
+  }
+  const { data, error } = await query.range(offset, offset + limit - 1);
+  if (error) throw error;
+  return data;
+}

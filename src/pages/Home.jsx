@@ -58,8 +58,9 @@ const popular = [...eateries]
       ) : (
         <>
           <div className="section-head" id="reviews">
-            <h2>Recent reviews</h2>
-          </div>
+  <h2>Recent reviews</h2>
+  <Link to="/reviews" className="see-all">See all →</Link>
+</div>
           <div className="row6">
             {reviews.map((r) => {
               const e = byId[r.eatery_id];
@@ -93,7 +94,7 @@ const popular = [...eateries]
 
           {top.length > 0 && (
   <>
-    <div className="section-head"><h2>Most liked reviews</h2></div>
+    <div className="section-head"><h2>Most liked reviews</h2> <Link to="/reviews" className="see-all">See all →</Link></div>
     <div className="two-col">
       {top.map((r) => {
         const e = byId[r.eatery_id];

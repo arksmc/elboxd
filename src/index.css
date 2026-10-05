@@ -439,3 +439,13 @@ html, body { max-width: 100%; overflow-x: hidden; }
 .avatar-sm { width: 44px; aspect-ratio: 1; font-size: 1.2rem; flex-shrink: 0; }
 .person h3 { font-size: 1rem; }
 .person .muted { margin: 0; }
+
+.tabs { display: flex; gap: 0.5rem; margin: 1rem 0; }
+.tab {
+  background: var(--card); color: var(--muted); border: 1px solid var(--border);
+  border-radius: 999px; padding: 0.4rem 1rem; font: inherit; font-size: 0.9rem; cursor: pointer;
+}
+.tab.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.load-more { display: block; margin: 1.25rem auto 0; }
+.section-head { display: flex; justify-content: space-between; align-items: baseline; }
+.see-all { color: var(--link); font-size: 0.8rem; }

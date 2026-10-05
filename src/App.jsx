@@ -10,7 +10,8 @@ import Terms from "./pages/Terms";
 import Profile from "./pages/Profile";
 import Suggest from "./pages/Suggest";
 import Admin from "./pages/Admin";
-import People from ".pages/People";
+import People from "./pages/People";
+import Reviews from "./pages/Reviews";
 
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/suggest" element={<Suggest />} />
         <Route path="/people" element={<People />} />
+        <Route path="/reviews" element={<Reviews />} />
       </Routes>
     </Layout>
   );
