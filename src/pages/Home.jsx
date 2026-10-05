@@ -111,7 +111,7 @@ const popular = [...eateries]
           </div>
 
           <div className="section-head" id="lists"><h2>Popular lists</h2></div>
-          <div className="banner">Curated lists like "Best budget meals near Gate 2" are coming soon.</div>
+          <div className="banner">Curated lists like "Best budget meals near Raymundo" are coming soon.</div>
         </>
       )}
     </main>
