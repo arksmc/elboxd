@@ -5,7 +5,6 @@ import SearchBar from "../components/SearchBar";
 import StarRating from "../components/StarRating";
 import Meta from "../components/Meta";
 import { formatDate } from "../lib/format";
-import { SUGGEST_URL } from "../lib/config";
 import { getEateries, getRecentReviews, getEateryStats, getTopReviews } from "../lib/api";
 import { weightedScore } from "../lib/ratings";
 

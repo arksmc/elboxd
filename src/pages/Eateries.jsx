@@ -107,8 +107,7 @@ export default function Eateries() {
             </div>
           ) : (
             <p className="banner">
-              No eateries match. Try clearing a filter, or{" "}
-              <a href={SUGGEST_URL} target="_blank" rel="noreferrer"><b>suggest one</b></a>.
+              No eateries match. Try clearing a filter.
             </p>
           )}
         </>
