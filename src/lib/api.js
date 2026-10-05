@@ -271,7 +271,24 @@ export async function searchProfiles(q, limit = 20) {
 
   const { data, error } = await query;
   if (error) throw error;
-  return data;
+  if (!data.length) return data;
+
+  // Attach each person's first badge (nickname only, no user_id)
+  const { data: badges, error: e2 } = await supabase
+    .from("public_profile_badges")
+    .select("nickname, code, emoji, label")
+    .in("nickname", data.map((p) => p.nickname));
+  if (e2) throw e2;
+
+  const first = {};
+  badges.forEach((b) => { if (!first[b.nickname]) first[b.nickname] = b; });
+
+  return data.map((p) => ({
+    ...p,
+    badge_key: first[p.nickname]?.code ?? null,
+    badge_emoji: first[p.nickname]?.emoji ?? null,
+    badge_label: first[p.nickname]?.label ?? null,
+  }));
 }
 
 export async function getReviewsPage({ sort = "recent", offset = 0, limit = 20 }) {

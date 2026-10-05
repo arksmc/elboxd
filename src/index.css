@@ -449,3 +449,10 @@ html, body { max-width: 100%; overflow-x: hidden; }
 .load-more { display: block; margin: 1.25rem auto 0; }
 .section-head { display: flex; justify-content: space-between; align-items: baseline; }
 .see-all { color: var(--link); font-size: 0.8rem; }
+
+.person-lori { border-color: rgba(168, 85, 247, 0.55); box-shadow: 0 0 14px rgba(168, 85, 247, 0.15); }
+.person-lori .avatar-sm {
+  background: linear-gradient(160deg, #6d28d9, #a855f7);
+  border-color: #c084fc;
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.35), 0 0 16px rgba(168, 85, 247, 0.6);
+}

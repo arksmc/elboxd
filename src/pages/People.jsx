@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { searchProfiles } from "../lib/api";
 import Meta from "../components/Meta";
+import Badge from "../components/Badge";
 
 export default function People() {
   const [params, setParams] = useSearchParams();
@@ -50,19 +51,22 @@ export default function People() {
         <div className="grid">
           {results.map((p) => (
             <Link
-              key={p.nickname}
-              to={`/u/${encodeURIComponent(p.nickname)}`}
-              className="card person"
-            >
-              <div className="tile avatar-sm">{p.nickname[0].toUpperCase()}</div>
-              <div>
-                <h3>{p.nickname}</h3>
-                <p className="muted">
-                  {p.review_count} reviews
-                  {p.avg_rating ? ` · avg ${p.avg_rating}★` : ""} · ♥ {p.total_likes}
-                </p>
-              </div>
-            </Link>
+  key={p.nickname}
+  to={`/u/${encodeURIComponent(p.nickname)}`}
+  className={"card person" + (p.badge_key ? ` person-${p.badge_key}` : "")}
+>
+  <div className="tile avatar-sm">{p.nickname[0].toUpperCase()}</div>
+  <div>
+    <h3>
+      {p.nickname}
+      <Badge code={p.badge_key} emoji={p.badge_emoji} label={p.badge_label} />
+    </h3>
+    <p className="muted">
+      {p.review_count} reviews
+      {p.avg_rating ? ` · avg ${p.avg_rating}★` : ""} · ♥ {p.total_likes}
+    </p>
+  </div>
+</Link>
           ))}
         </div>
       )}
