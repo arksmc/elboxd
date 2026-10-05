@@ -16,6 +16,7 @@ export default function Suggest() {
   const [category, setCategory] = useState("");
   const [note, setNote] = useState("");
   const [status, setStatus] = useState("idle");
+  const [otherArea, setOtherArea] = useState("");
 
   useEffect(() => {
     getEateries().then(setEateries).catch(console.error);
@@ -31,8 +32,13 @@ export default function Suggest() {
     e.preventDefault();
     setStatus("sending");
     try {
-      await createSuggestion({ userId: user.id, name: name.trim(), area, category, note: note.trim() });
-      setStatus("done");
+      await createSuggestion({
+  userId: user.id,
+  name: name.trim(),
+  area: area === "Other" ? otherArea.trim() : area,
+  category,
+  note: note.trim(),
+});
     } catch (err) {
       console.error(err);
       setStatus(err.message?.includes("limit") ? "limit" : "error");
@@ -83,6 +89,15 @@ export default function Suggest() {
             {unique(eateries.map((e) => e.area)).map((a) => <option key={a}>{a}</option>)}
             <option>Other</option>
           </select>
+          {area === "Other" && (
+  <input
+    placeholder="Which area? (e.g. Paliparan)"
+    value={otherArea}
+    onChange={(e) => setOtherArea(e.target.value)}
+    maxLength={40}
+    required
+  />
+)}
           <select value={category} onChange={(e) => setCategory(e.target.value)}>
             <option value="">Type (optional)</option>
             {unique(eateries.map((e) => e.category)).map((c) => <option key={c}>{c}</option>)}
