@@ -27,6 +27,7 @@ export default function Home() {
 const popular = [...eateries]
   .sort(
     (a, b) =>
+      (stats[b.id]?.review_count ?? 0) - (stats[a.id]?.review_count ?? 0) ||
       weightedScore(stats[b.id]) - weightedScore(stats[a.id]) ||
       a.name.localeCompare(b.name)
   )
