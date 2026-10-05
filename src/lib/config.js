@@ -1,0 +1,1 @@
+export const SUGGEST_URL = "https://forms.gle/YFmZuRW6YTYdBiA69";

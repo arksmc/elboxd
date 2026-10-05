@@ -6,6 +6,7 @@ import SearchBar from "../components/SearchBar";
 import StarRating from "../components/StarRating";
 import Meta from "../components/Meta";
 import { formatDate } from "../lib/format";
+import { SUGGEST_URL } from "../lib/config";
 
 const label = (e) => (e.branch ? `${e.name} ${e.branch}` : e.name);
 
@@ -61,7 +62,7 @@ export default function Home() {
             })}
           </div>
 
-          <a className="banner" href="#">
+          <a className="banner" href={SUGGEST_URL} target="_blank" rel="noreferrer">
             Know a place we're missing? <b>Suggest an eatery →</b>
           </a>
 

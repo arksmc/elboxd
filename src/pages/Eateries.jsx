@@ -4,6 +4,7 @@ import { getEateries, getEateryStats } from "../lib/api";
 import EateryCard from "../components/EateryCard";
 import SearchBar from "../components/SearchBar";
 import Meta from "../components/Meta";
+import { SUGGEST_URL } from "../lib/config";
 
 const unique = (arr) => [...new Set(arr.filter(Boolean))].sort();
 
@@ -65,7 +66,7 @@ export default function Eateries() {
       <Meta title="Eateries" description="Browse every eatery in and around UPLB." />
       <h1>Eateries</h1>
 
-      <a className="banner" href="#">
+      <a className="banner" href={SUGGEST_URL} target="_blank" rel="noreferrer">
         Can't find your eatery? <b>Suggest an eatery</b>
       </a>
 
@@ -112,7 +113,10 @@ export default function Eateries() {
               ))}
             </div>
           ) : (
-            <p className="banner">No eateries match. Try clearing a filter, or suggest one.</p>
+            <p className="banner">
+              No eateries match. Try clearing a filter, or{" "}
+              <a href={SUGGEST_URL} target="_blank" rel="noreferrer"><b>suggest one</b></a>.
+            </p>
           )}
         </>
       )}
