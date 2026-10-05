@@ -126,12 +126,17 @@ create trigger nickname_change_guard
   for each row execute function check_nickname_change();
 
 -- Public profile data: no user_id
-create view public_profiles as
+create or replace view public_profiles as
 select
   p.nickname,
   p.created_at,
   count(r.id)::int as review_count,
-  round(avg(r.rating)::numeric, 1)::float as avg_rating
+  round(avg(r.rating)::numeric, 1)::float as avg_rating,
+  (
+    select count(*) from review_likes l
+    join reviews rr on rr.id = l.review_id
+    where rr.user_id = p.user_id and rr.hidden = false
+  )::int as total_likes
 from profiles p
 left join reviews r on r.user_id = p.user_id and r.hidden = false
 group by p.user_id, p.nickname, p.created_at;

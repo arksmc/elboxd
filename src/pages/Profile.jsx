@@ -104,9 +104,10 @@ async function handleFavorite(position, value) {
         <div>
           <h1>{profile.nickname}</h1>
           <p className="muted">
-            Joined {joined} · {profile.review_count} reviews
-            {profile.avg_rating ? ` · avg ${profile.avg_rating}★` : ""}
-          </p>
+  Joined {joined} · {profile.review_count} reviews
+  {profile.avg_rating ? ` · avg ${profile.avg_rating}★` : ""}
+  {` · ♥ ${profile.total_likes}`}
+</p>
           {isMine && !editing && (
             <button className="link-btn danger-free" onClick={() => { setEditing(true); setNewName(nickname); }}>
               Edit nickname
@@ -173,7 +174,9 @@ async function handleFavorite(position, value) {
                   <StarRating value={r.rating} />
                 </div>
                 <p>{r.body}</p>
-                <small className="muted">{formatDate(r.created_at)}</small>
+               <small className="muted">
+  {formatDate(r.created_at)} · ♥ {r.like_count}
+</small>
               </li>
             );
           })}
