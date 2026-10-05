@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import useUser from "../lib/useUser";
-import { signOut, getMyProfile } from "../lib/api";
+import { signOut, getMyProfile, checkIsAdmin} from "../lib/api";
 
 export default function Layout({ children }) {
   const { user, loading } = useUser();
   const [nick, setNick] = useState(null);
   const [confirming, setConfirming] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
-    if (!user) {
-      setNick(null);
-      return;
-    }
-    getMyProfile(user.id)
-      .then((p) => setNick(p?.nickname ?? null))
-      .catch(console.error);
-  }, [user]);
+  if (!user) {
+    setNick(null);
+    setIsAdmin(false);
+    return;
+  }
+  getMyProfile(user.id).then((p) => setNick(p?.nickname ?? null)).catch(console.error);
+  checkIsAdmin().then(setIsAdmin);
+}, [user]);
 
 function handleSignOut() {
   if (!confirming) {
@@ -38,22 +39,23 @@ function handleSignOut() {
             <a href="/#lists">Lists</a>
           </nav>
           {!loading && (user ? (
-            <>
-              {nick && (
-                <Link to={`/u/${encodeURIComponent(nick)}`} className="link-btn">
-                  My profile
-                </Link>
-              )}
-              <button
-  className={"link-btn" + (confirming ? " confirm" : "")}
-  onClick={handleSignOut}
->
-  {confirming ? "Tap again to sign out" : "Sign out"}
-</button>
-            </>
-          ) : (
-            <Link to="/login" className="link-btn">Sign in</Link>
-          ))}
+  <>
+    {nick && (
+      <Link to={`/u/${encodeURIComponent(nick)}`} className="link-btn">
+        My profile
+      </Link>
+    )}
+    {isAdmin && <Link to="/admin" className="link-btn">Admin</Link>}
+    <button
+      className={"link-btn" + (confirming ? " confirm" : "")}
+      onClick={handleSignOut}
+    >
+      {confirming ? "Tap again to sign out" : "Sign out"}
+    </button>
+  </>
+) : (
+  <Link to="/login" className="link-btn">Sign in</Link>
+))}
           <Link to="/eateries" className="pill">+ REVIEW</Link>
         </div>
       </header>

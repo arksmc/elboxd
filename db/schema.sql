@@ -234,3 +234,41 @@ $$ language plpgsql;
 create trigger suggestions_limit
   before insert on suggestions
   for each row execute function limit_suggestions();
+
+  create table admins (
+  user_id uuid primary key references auth.users(id) on delete cascade
+);
+alter table admins enable row level security;  -- no policies: nobody reads it directly
+
+create or replace function is_admin() returns boolean
+language sql security definer stable set search_path = public as $$
+  select exists (select 1 from admins where user_id = auth.uid())
+$$;
+
+-- Admins only
+create policy "Admins read suggestions" on suggestions for select using (is_admin());
+create policy "Admins update suggestions" on suggestions for update using (is_admin());
+create policy "Admins read reports" on reports for select using (is_admin());
+create policy "Admins update reports" on reports for update using (is_admin());
+create policy "Admins read reviews" on reviews for select using (is_admin());
+create policy "Admins update reviews" on reviews for update using (is_admin());
+create policy "Admins insert eateries" on eateries for insert with check (is_admin());
+create policy "Admins update eateries" on eateries for update using (is_admin());
+
+-- Closes a hole: without this, people could un-hide their own hidden review
+create or replace function protect_review_hidden() returns trigger as $$
+begin
+  if new.hidden is distinct from old.hidden and not is_admin() then
+    new.hidden := old.hidden;
+  end if;
+  return new;
+end;
+$$ language plpgsql;
+
+create trigger reviews_protect_hidden
+  before update on reviews
+  for each row execute function protect_review_hidden();
+
+-- Make yourself admin (use the email you sign in with)
+insert into admins (user_id)
+select id from auth.users where email = 'YOUR_EMAIL@gmail.com';

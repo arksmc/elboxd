@@ -213,3 +213,48 @@ export async function getBadgesByNickname(nickname) {
   if (error) throw error;
   return data;
 }
+
+export async function checkIsAdmin() {
+  const { data, error } = await supabase.rpc("is_admin");
+  return !error && data === true;
+}
+
+export async function getOpenSuggestions() {
+  const { data, error } = await supabase
+    .from("suggestions").select("*").eq("status", "open").order("created_at");
+  if (error) throw error;
+  return data;
+}
+
+export async function getOpenReports() {
+  const { data, error } = await supabase
+    .from("reports")
+    .select("id, reason, note, created_at, review_id, reviews(id, eatery_id, rating, body, hidden)")
+    .eq("status", "open")
+    .order("created_at");
+  if (error) throw error;
+  return data;
+}
+
+export async function setSuggestionStatus(id, status) {
+  const { error } = await supabase.from("suggestions").update({ status }).eq("id", id);
+  if (error) throw error;
+}
+
+export async function setReportStatus(id, status) {
+  const { error } = await supabase.from("reports").update({ status }).eq("id", id);
+  if (error) throw error;
+}
+
+export async function hideReview(reviewId) {
+  const { error } = await supabase.from("reviews").update({ hidden: true }).eq("id", reviewId);
+  if (error) throw error;
+  const { error: e2 } = await supabase
+    .from("reports").update({ status: "resolved" }).eq("review_id", reviewId);
+  if (e2) throw e2;
+}
+
+export async function addEatery(row) {
+  const { error } = await supabase.from("eateries").insert(row);
+  if (error) throw error;
+}

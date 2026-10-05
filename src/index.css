@@ -431,3 +431,6 @@ html, body { max-width: 100%; overflow-x: hidden; }
 @keyframes fadeA { 0%, 40% { opacity: 1; } 50%, 90% { opacity: 0; } 100% { opacity: 1; } }
 @keyframes fadeB { 0%, 40% { opacity: 0; } 50%, 90% { opacity: 1; } 100% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .swap-a, .swap-b { animation: none; } .swap-b { display: none; } }
+
+.review .form { margin: 0.75rem 0 0; }
+.review .link-btn { color: var(--link); }
