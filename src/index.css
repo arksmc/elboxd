@@ -346,4 +346,9 @@ html, body { max-width: 100%; overflow-x: hidden; }
 .form-actions .link-btn.danger:hover {
   background: rgba(255, 107, 107, 0.12);
   border-color: #ff6b6b;
+  justify-content: space-between; 
+}
+@media (max-width: 700px) {
+  .form-actions { flex-direction: column; align-items: stretch; }
+  .form-actions .btn, .form-actions .link-btn.danger { width: 100%; }
 }
