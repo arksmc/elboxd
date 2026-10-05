@@ -6,7 +6,7 @@ import { signOut, getMyProfile } from "../lib/api";
 export default function Layout({ children }) {
   const { user, loading } = useUser();
   const [nick, setNick] = useState(null);
-
+  const [confirming, setConfirming] = useState(false);
   useEffect(() => {
     if (!user) {
       setNick(null);
@@ -17,8 +17,14 @@ export default function Layout({ children }) {
       .catch(console.error);
   }, [user]);
 
-  function handleSignOut() {
-  if (window.confirm("Sign out of TAMIS?")) signOut();
+function handleSignOut() {
+  if (!confirming) {
+    setConfirming(true);
+    setTimeout(() => setConfirming(false), 3000);
+    return;
+  }
+  signOut();
+  setConfirming(false);
 }
 
   return (
@@ -38,7 +44,9 @@ export default function Layout({ children }) {
                   My profile
                 </Link>
               )}
-              <button className="link-btn" onClick={handleSignOut}>Sign out</button>
+              <button className="link-btn" onClick={handleSignOut}>
+  {confirming ? "Tap again to sign out" : "Sign out"}
+</button>
             </>
           ) : (
             <Link to="/login" className="link-btn">Sign in</Link>
