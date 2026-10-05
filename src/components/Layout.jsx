@@ -44,7 +44,10 @@ function handleSignOut() {
                   My profile
                 </Link>
               )}
-              <button className="link-btn" onClick={handleSignOut}>
+              <button
+  className={"link-btn" + (confirming ? " confirm" : "")}
+  onClick={handleSignOut}
+>
   {confirming ? "Tap again to sign out" : "Sign out"}
 </button>
             </>

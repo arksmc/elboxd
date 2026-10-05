@@ -392,3 +392,9 @@ html, body { max-width: 100%; overflow-x: hidden; }
 .suggest-matches { display: grid; gap: 0.3rem; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 0.8rem; }
 .suggest-matches a { color: var(--link); font-size: 0.9rem; }
 .form select { background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 0.65rem 0.8rem; font: inherit; }
+.link-btn.confirm {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+}
