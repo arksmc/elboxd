@@ -20,7 +20,7 @@ export default function Home() {
 
   useEffect(() => {
   getEateries().then(setEateries);
-  getRecentReviews(5).then(setReviews);
+  getRecentReviews(6).then(setReviews);
   getEateryStats().then(setStats).catch(console.error);
   getTopReviews(6).then(setTop).catch(console.error);
 }, []);
@@ -32,7 +32,7 @@ const popular = [...eateries]
       weightedScore(stats[b.id]) - weightedScore(stats[a.id]) ||
       a.name.localeCompare(b.name)
   )
-  .slice(0, 5);
+  .slice(0, 6);
 
   const byId = Object.fromEntries(eateries.map((e) => [e.id, e]));
   const filtered = eateries.filter((e) =>
@@ -45,11 +45,10 @@ const popular = [...eateries]
     <main>
       <Meta />
       <section className="hero">
-        <h1>Find where to eat around UPLB.</h1>
-        <p>Honest, anonymous reviews from students.</p>
-        <SearchBar value={query} onChange={setQuery} />
-      </section>
-
+  <h1>See what others think of UPLB eateries.</h1>
+  <p>Real reviews from students, posted under nicknames.</p>
+  <SearchBar value={query} onChange={setQuery} />
+</section>
       {query ? (
         <>
           <div className="section-head"><h2>Results</h2></div>
