@@ -28,8 +28,8 @@ create table profiles (
 
 alter table profiles enable row level security;
 
-create policy "Anyone can read profiles"
-  on profiles for select using (true);
+create policy "Users read own profile"
+  on profiles for select using (auth.uid() = user_id);
 
 create policy "Users insert own profile"
   on profiles for insert with check (auth.uid() = user_id);
