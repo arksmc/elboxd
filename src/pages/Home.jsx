@@ -17,7 +17,7 @@ export default function Home() {
 
   useEffect(() => {
     getEateries().then(setEateries);
-    getRecentReviews(6).then(setReviews);
+    getRecentReviews(5).then(setReviews);
   }, []);
 
   const byId = Object.fromEntries(eateries.map((e) => [e.id, e]));
@@ -68,7 +68,7 @@ export default function Home() {
 
           <div className="section-head"><h2>Popular eateries</h2></div>
           <div className="row6">
-            {eateries.slice(0, 6).map((e) => (
+            {eateries.slice(0, 5).map((e) => (
               <Link key={e.id} to={`/eatery/${e.slug}`} className="mini">
                 <div className="tile">{e.name[0]}</div>
                 <strong>{label(e)}</strong>
@@ -79,7 +79,7 @@ export default function Home() {
 
           <div className="section-head"><h2>Popular reviews</h2></div>
           <div className="two-col">
-            {reviews.slice(0, 4).map((r) => {
+            {reviews.slice(0, 5).map((r) => {
               const e = byId[r.eatery_id];
               return e && (
                 <article key={r.id} className="review">
