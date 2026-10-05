@@ -28,19 +28,24 @@ export default function Profile() {
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
-    setLoading(true);
-    Promise.all([
-  getPublicProfile(nickname),
-  getReviewsByNickname(nickname),
-  getEateries(),
-  getFavoritesByNickname(nickname),
-])
-  .then(([p, r, e, f]) => { setProfile(p); setReviews(r); setEateries(e); setFavorites(f); })
+  setLoading(true);
 
-  useEffect(() => {
-    if (!user) { setMyNickname(null); return; }
-    getMyProfile(user.id).then((p) => setMyNickname(p?.nickname ?? null)).catch(console.error);
-  }, [user, nickname]);
+  Promise.all([
+    getPublicProfile(nickname),
+    getReviewsByNickname(nickname),
+    getEateries(),
+    getFavoritesByNickname(nickname),
+  ])
+    .then(([p, r, e, f]) => {
+      setProfile(p);
+      setReviews(r);
+      setEateries(e);
+      setFavorites(f);
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+}, [nickname]);
 
   async function handleRename(e) {
     e.preventDefault();
