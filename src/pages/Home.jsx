@@ -7,6 +7,8 @@ import StarRating from "../components/StarRating";
 import Meta from "../components/Meta";
 import { formatDate } from "../lib/format";
 import { SUGGEST_URL } from "../lib/config";
+import { getEateries, getRecentReviews, getEateryStats } from "../lib/api";
+import { weightedScore } from "../lib/ratings";
 
 const label = (e) => (e.branch ? `${e.name} ${e.branch}` : e.name);
 
@@ -14,11 +16,21 @@ export default function Home() {
   const [eateries, setEateries] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [query, setQuery] = useState("");
+  const [stats, setStats] = useState({});
 
   useEffect(() => {
-    getEateries().then(setEateries);
-    getRecentReviews(5).then(setReviews);
-  }, []);
+  getEateries().then(setEateries);
+  getRecentReviews(5).then(setReviews);
+  getEateryStats().then(setStats).catch(console.error);
+}, []);
+
+const popular = [...eateries]
+  .sort(
+    (a, b) =>
+      weightedScore(stats[b.id]) - weightedScore(stats[a.id]) ||
+      a.name.localeCompare(b.name)
+  )
+  .slice(0, 5);
 
   const byId = Object.fromEntries(eateries.map((e) => [e.id, e]));
   const filtered = eateries.filter((e) =>
@@ -68,13 +80,15 @@ export default function Home() {
 
           <div className="section-head"><h2>Popular eateries</h2></div>
           <div className="row6">
-            {eateries.slice(0, 5).map((e) => (
-              <Link key={e.id} to={`/eatery/${e.slug}`} className="mini">
-                <div className="tile">{e.name[0]}</div>
-                <strong>{label(e)}</strong>
-                <small className="muted">{e.area}</small>
-              </Link>
-            ))}
+            {popular.map((e) => (
+  <Link key={e.id} to={`/eatery/${e.slug}`} className="mini">
+    <div className="tile">{e.name[0]}</div>
+    <strong>{label(e)}</strong>
+    <small className="muted">
+      {stats[e.id] ? `★ ${stats[e.id].avg_rating} (${stats[e.id].review_count})` : e.area}
+    </small>
+  </Link>
+))}
           </div>
 
           <div className="section-head"><h2>Popular reviews</h2></div>

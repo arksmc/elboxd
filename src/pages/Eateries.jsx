@@ -5,6 +5,7 @@ import EateryCard from "../components/EateryCard";
 import SearchBar from "../components/SearchBar";
 import Meta from "../components/Meta";
 import { SUGGEST_URL } from "../lib/config";
+import { weightedScore } from "../lib/ratings";
 
 const unique = (arr) => [...new Set(arr.filter(Boolean))].sort();
 
@@ -35,13 +36,6 @@ export default function Eateries() {
     setParams(next, { replace: true });
   }
 
-  // Weighted score so one 5-star review doesn't beat fifty 4.5s
-  const score = (e) => {
-    const s = stats[e.id];
-    if (!s) return 0;
-    return (s.review_count * s.avg_rating + 3 * 3.5) / (s.review_count + 3);
-  };
-
   const filtered = eateries
     .filter((e) => showClosed || e.status === "open")
     .filter((e) => !area || e.area === area)
@@ -53,7 +47,7 @@ export default function Eateries() {
         .includes(q.toLowerCase())
     )
     .sort((a, b) => {
-      if (sort === "rating") return score(b) - score(a);
+      if (sort === "rating") return weightedScore(stats[b.id]) - weightedScore(stats[a.id]);
       if (sort === "reviews")
         return (stats[b.id]?.review_count ?? 0) - (stats[a.id]?.review_count ?? 0);
       return a.name.localeCompare(b.name) || (a.branch ?? "").localeCompare(b.branch ?? "");
