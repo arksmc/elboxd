@@ -42,7 +42,7 @@ create table reviews (
   id bigint generated always as identity primary key,
   eatery_id bigint not null references eateries(id) on delete cascade,
   user_id uuid not null references auth.users(id) on delete cascade,
-  rating int not null check (rating between 1 and 5),
+  rating numeric(2,1) not null check (rating >= 0.5 and rating <= 5 and rating * 2 = floor(rating * 2)),
   body text check (char_length(body) <= 1000),
   hidden boolean not null default false,
   created_at timestamptz not null default now(),
@@ -64,13 +64,10 @@ create policy "Users read own reviews"
   on reviews for select using (auth.uid() = user_id);
 
 -- Public view: no user_id exposed
+-- Half-star ratings: rating is numeric(2,1) in steps of 0.5.
 create view public_reviews as
 select
-  r.id,
-  r.eatery_id,
-  r.rating,
-  r.body,
-  r.created_at,
+  r.id, r.eatery_id, r.rating, r.body, r.created_at,
   coalesce(p.nickname, 'Anonymous') as nickname
 from reviews r
 left join profiles p on p.user_id = r.user_id
@@ -78,6 +75,7 @@ where r.hidden = false;
 
 grant select on public_reviews to anon, authenticated;
 
+-- Per-eatery rating summary
 create view eatery_stats as
 select
   eatery_id,
