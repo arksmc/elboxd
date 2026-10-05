@@ -2,14 +2,13 @@ import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   getPublicProfile, getReviewsByNickname, getEateries, getMyProfile, updateNickname,
+  getFavoritesByNickname, setFavorite, removeFavorite,
 } from "../lib/api";
 import useUser from "../lib/useUser";
 import StarRating from "../components/StarRating";
 import Meta from "../components/Meta";
 import { formatDate } from "../lib/format";
-import {
-    getFavoritesByNickname, setFavorite, removeFavorite
-} from "../lib/api";
+
 
 const label = (e) => (e.branch ? `${e.name} ${e.branch}` : e.name);
 
@@ -42,10 +41,18 @@ export default function Profile() {
       setEateries(e);
       setFavorites(f);
     })
+        .catch(console.error)
     .finally(() => {
       setLoading(false);
     });
 }, [nickname]);
+
+    useEffect(() => {
+  if (!user) { setMyNickname(null); return; }
+  getMyProfile(user.id)
+    .then((p) => setMyNickname(p?.nickname ?? null))
+    .catch(console.error);
+}, [user, nickname]);
 
   async function handleRename(e) {
     e.preventDefault();
