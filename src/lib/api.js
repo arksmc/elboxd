@@ -112,3 +112,15 @@ export async function deleteMyReview(eateryId, userId) {
     .eq("user_id", userId);
   if (error) throw error;
 }
+
+export async function reportReview({ reviewId, reason, note }) {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) throw new Error("Not signed in");
+  const { error } = await supabase.from("reports").insert({
+    review_id: reviewId,
+    reporter_id: session.user.id,
+    reason,
+    note: note || null,
+  });
+  if (error) throw error;
+}

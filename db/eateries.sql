@@ -81,5 +81,6 @@ insert into eateries (slug, name, branch, chain, area, category, tags, status) v
 ('h2-cafe', 'H2 Cafe', null, null, 'Raymundo', 'Cafe', null, 'open'),
 ('yakiyaki', 'Yakiyaki', null, null, 'Raymundo', 'Food Stall', array['Japanese'], 'open'),
 ('we-deliver-uplb', 'We Deliver', 'UPLB Campus', 'We Deliver', 'UPLB Campus', 'Food Stall', array['Breakfast'], 'open'),
-('pickup-coffee-uplb', 'Pickup Coffee', 'UPLB Campus', 'Pickup Coffee', 'UPLB Campus', 'Cafe', null, 'open')
+('pickup-coffee-uplb', 'Pickup Coffee', 'UPLB Campus', 'Pickup Coffee', 'UPLB Campus', 'Cafe', null, 'open'),
+('kwatogs', 'Kwatogs', null, null, 'Junction', 'Restaurant', null, 'open')
 on conflict (slug) do nothing;

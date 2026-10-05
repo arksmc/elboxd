@@ -352,3 +352,16 @@ html, body { max-width: 100%; overflow-x: hidden; }
   .form-actions { flex-direction: column; align-items: stretch; }
   .form-actions .btn, .form-actions .link-btn.danger { width: 100%; }
 }
+
+.review-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; }
+.report-link { background: none; border: 0; color: var(--muted); font-size: 0.8rem; cursor: pointer; padding: 0; }
+.report-link:hover { color: #ff6b6b; }
+.report-form { display: grid; gap: 0.5rem; margin-top: 0.5rem; width: 100%; }
+.report-form select, .report-form input {
+  background: var(--bg); color: var(--text); border: 1px solid var(--border);
+  border-radius: 6px; padding: 0.5rem 0.7rem; font: inherit; font-size: 0.9rem;
+}
+.review-foot:has(.report-form) { flex-direction: column; align-items: stretch; }
+@media (max-width: 700px) {
+  .report-form select, .report-form input { font-size: 16px; }
+}

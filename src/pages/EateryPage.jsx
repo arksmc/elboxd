@@ -196,7 +196,7 @@ export default function EateryPage() {
           )}
 
           <div className="section-head"><h2>Recent reviews</h2></div>
-          <ReviewList reviews={reviews} />
+          <ReviewList reviews={reviews} canReport={Boolean(user)} />
 
           {branches.length > 0 && (
             <>
