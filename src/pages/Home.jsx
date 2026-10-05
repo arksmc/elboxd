@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getEateries, getRecentReviews } from "../lib/api";
 import EateryCard from "../components/EateryCard";
 import SearchBar from "../components/SearchBar";
 import StarRating from "../components/StarRating";
