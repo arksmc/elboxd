@@ -1,4 +1,4 @@
--- UPLB Eats schema. A record of what exists in Supabase.
+-- TAMIS schema. A record of what exists in Supabase.
 -- Run once on a fresh project. Don't re-run on the live database.
 
 -- Eateries

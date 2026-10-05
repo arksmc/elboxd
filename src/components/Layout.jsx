@@ -14,7 +14,7 @@ export default function Layout({ children }) {
       <header className="site-header">
         <div className="header-inner">
           <div className="dots"><i /><i /><i /></div>
-          <Link to="/" className="brand">Elboxd</Link>
+          <Link to="/" className="brand"><span className="logo">T</span>TAMIS</Link>
           <nav className="nav">
             <NavLink to="/eateries">Eateries</NavLink>
             <a href="/#reviews">Reviews</a>
@@ -27,9 +27,9 @@ export default function Layout({ children }) {
       <div className="container">{children}</div>
     <footer className="site-footer">
         <div className="footer-inner">
-            <span>© Elboxd</span>
+           <span>© TAMIS</span>
 <span className="muted">
-  Student-made · Reviews are posted under nicknames
+  Student-made · Not affiliated with UPLB
   <br />
   <Link to="/privacy">Privacy</Link> · <Link to="/terms">Terms</Link>
 </span>
