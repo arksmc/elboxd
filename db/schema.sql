@@ -102,3 +102,38 @@ alter table reports enable row level security;
 
 create policy "Users file reports"
   on reports for insert with check (auth.uid() = reporter_id);
+
+  -- Profiles: nickname change limit (once per 30 days) and public stats view
+alter table profiles add column if not exists nickname_changed_at timestamptz;
+
+create or replace function check_nickname_change() returns trigger as $$
+begin
+  if new.nickname is distinct from old.nickname then
+    if old.nickname_changed_at is not null
+       and old.nickname_changed_at > now() - interval '30 days' then
+      raise exception 'Nickname can only be changed once every 30 days';
+    end if;
+    new.nickname_changed_at := now();
+  else
+    new.nickname_changed_at := old.nickname_changed_at;
+  end if;
+  return new;
+end;
+$$ language plpgsql;
+
+create trigger nickname_change_guard
+  before update on profiles
+  for each row execute function check_nickname_change();
+
+-- Public profile data: no user_id
+create view public_profiles as
+select
+  p.nickname,
+  p.created_at,
+  count(r.id)::int as review_count,
+  round(avg(r.rating)::numeric, 1)::float as avg_rating
+from profiles p
+left join reviews r on r.user_id = p.user_id and r.hidden = false
+group by p.user_id, p.nickname, p.created_at;
+
+grant select on public_profiles to anon, authenticated;
