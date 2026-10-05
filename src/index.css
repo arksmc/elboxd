@@ -398,3 +398,36 @@ html, body { max-width: 100%; overflow-x: hidden; }
   border-radius: 6px;
   padding: 0.25rem 0.6rem;
 }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+  font-size: 0.72rem; font-weight: 700; padding: 0.1rem 0.55rem;
+  border-radius: 999px; margin-left: 0.4rem; vertical-align: middle;
+  background: var(--accent-soft); color: var(--text);
+}
+
+/* Lori: shimmering purple, with glow */
+.badge-lori {
+  color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  background: linear-gradient(110deg, #6d28d9 0%, #a855f7 40%, #e9d5ff 50%, #a855f7 60%, #6d28d9 100%);
+  background-size: 250% 100%;
+  animation: shimmer 3s linear infinite;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.55);
+}
+@keyframes shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+@media (prefers-reduced-motion: reduce) { .badge-lori { animation: none; } }
+
+.review.has-badge-lori { border-color: rgba(168, 85, 247, 0.55); box-shadow: 0 0 14px rgba(168, 85, 247, 0.15); }
+
+.profile-lori .avatar {
+  background: linear-gradient(160deg, #6d28d9, #a855f7); border-color: #c084fc;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.35), 0 0 22px rgba(168, 85, 247, 0.6);
+}
+
+.badge-swap { display: inline-grid; }
+.badge-swap > span { grid-area: 1 / 1; text-align: center; }
+.swap-a { animation: fadeA 6s infinite; }
+.swap-b { animation: fadeB 6s infinite; }
+@keyframes fadeA { 0%, 40% { opacity: 1; } 50%, 90% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes fadeB { 0%, 40% { opacity: 0; } 50%, 90% { opacity: 1; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .swap-a, .swap-b { animation: none; } .swap-b { display: none; } }

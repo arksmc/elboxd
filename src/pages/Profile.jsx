@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   getPublicProfile, getReviewsByNickname, getEateries, getMyProfile, updateNickname,
-  getFavoritesByNickname, setFavorite, removeFavorite,
+  getFavoritesByNickname, setFavorite, removeFavorite, getBadgesByNickname
 } from "../lib/api";
 import useUser from "../lib/useUser";
 import StarRating from "../components/StarRating";
 import Meta from "../components/Meta";
 import { formatDate } from "../lib/format";
+import Badge from "../components/Badge";
 
 
 const label = (e) => (e.branch ? `${e.name} ${e.branch}` : e.name);
@@ -25,22 +26,21 @@ export default function Profile() {
   const [newName, setNewName] = useState("");
   const [error, setError] = useState("");
   const [favorites, setFavorites] = useState([]);
+  const [badges, setBadges] = useState([]);
 
   useEffect(() => {
   setLoading(true);
 
   Promise.all([
-    getPublicProfile(nickname),
-    getReviewsByNickname(nickname),
-    getEateries(),
-    getFavoritesByNickname(nickname),
-  ])
-    .then(([p, r, e, f]) => {
-      setProfile(p);
-      setReviews(r);
-      setEateries(e);
-      setFavorites(f);
-    })
+  getPublicProfile(nickname),
+  getReviewsByNickname(nickname),
+  getEateries(),
+  getFavoritesByNickname(nickname),
+  getBadgesByNickname(nickname),
+])
+  .then(([p, r, e, f, b]) => {
+    setProfile(p); setReviews(r); setEateries(e); setFavorites(f); setBadges(b);
+  })
         .catch(console.error)
     .finally(() => {
       setLoading(false);
@@ -99,10 +99,15 @@ async function handleFavorite(position, value) {
   return (
     <main>
       <Meta title={profile.nickname} description={`Reviews by ${profile.nickname}`} />
-      <div className="profile-head">
+      <div className={"profile-head" + (badges.some((b) => b.code === "lori") ? " profile-lori" : "")}>
         <div className="tile avatar">{profile.nickname[0].toUpperCase()}</div>
         <div>
           <h1>{profile.nickname}</h1>
+<div>
+  {badges.map((b) => (
+    <Badge key={b.code} code={b.code} emoji={b.emoji} label={b.label} full />
+  ))}
+</div>
           <p className="muted">
   Joined {joined} · {profile.review_count} reviews
   {profile.avg_rating ? ` · avg ${profile.avg_rating}★` : ""}

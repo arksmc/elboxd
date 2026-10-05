@@ -206,3 +206,10 @@ export async function createSuggestion({ userId, name, area, category, note }) {
   });
   if (error) throw error;
 }
+
+export async function getBadgesByNickname(nickname) {
+  const { data, error } = await supabase
+    .from("public_profile_badges").select("*").eq("nickname", nickname);
+  if (error) throw error;
+  return data;
+}

@@ -2,6 +2,7 @@ import StarRating from "./StarRating";
 import ReportButton from "./ReportButton";
 import LikeButton from "./LikeButton";
 import { formatDate } from "../lib/format";
+import Badge from "./Badge";
 
 export default function ReviewList({ reviews, canReport = false, likedIds }) {
   if (!reviews.length)
@@ -10,11 +11,14 @@ export default function ReviewList({ reviews, canReport = false, likedIds }) {
   return (
     <ul className="review-list">
       {reviews.map((r) => (
-        <li key={r.id} className="review">
-          <div className="review-head">
-            <strong>{r.nickname}</strong>
-            <StarRating value={r.rating} />
-          </div>
+        <li key={r.id} className={"review" + (r.badge_key ? ` has-badge-${r.badge_key}` : "")}>
+  <div className="review-head">
+    <strong>
+      {r.nickname}
+      <Badge code={r.badge_key} emoji={r.badge_emoji} label={r.badge_label} />
+    </strong>
+    <StarRating value={r.rating} />
+  </div>
           <p>{r.body}</p>
           <div className="review-foot">
             <span className="foot-left">
