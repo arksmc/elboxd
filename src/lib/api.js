@@ -195,3 +195,14 @@ export async function getTopReviews(limit = 6) {
   if (error) throw error;
   return data;
 }
+
+export async function createSuggestion({ userId, name, area, category, note }) {
+  const { error } = await supabase.from("suggestions").insert({
+    user_id: userId,
+    name,
+    area: area || null,
+    category: category || null,
+    note: note || null,
+  });
+  if (error) throw error;
+}

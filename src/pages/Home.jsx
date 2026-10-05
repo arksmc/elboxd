@@ -75,9 +75,9 @@ const popular = [...eateries]
             })}
           </div>
 
-          <a className="banner" href={SUGGEST_URL} target="_blank" rel="noreferrer">
-            Know a place we're missing? <b>Suggest an eatery →</b>
-          </a>
+            <Link className="banner" to="/suggest">
+    Know a place we're missing? <b>Suggest an eatery →</b>
+  </Link>
 
           <div className="section-head"><h2>Popular eateries</h2></div>
           <div className="row6">

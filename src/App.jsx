@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Profile from "./pages/Profile";
+import Suggest from "./pages/Suggest";
 
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/terms" element={<Terms />} />
         <Route path="/u/:nickname" element={<Profile />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/suggest" element={<Suggest />} />.
       </Routes>
     </Layout>
   );

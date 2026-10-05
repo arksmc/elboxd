@@ -203,3 +203,34 @@ select
 from reviews r
 left join profiles p on p.user_id = r.user_id
 where r.hidden = false;
+
+create table suggestions (
+  id bigint generated always as identity primary key,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  name text not null check (char_length(name) between 2 and 80),
+  area text,
+  category text,
+  note text check (char_length(note) <= 500),
+  status text not null default 'open',
+  created_at timestamptz not null default now()
+);
+
+alter table suggestions enable row level security;
+
+create policy "Users file suggestions"
+  on suggestions for insert with check (auth.uid() = user_id);
+
+-- Max 5 suggestions per user per day
+create or replace function limit_suggestions() returns trigger as $$
+begin
+  if (select count(*) from suggestions
+      where user_id = new.user_id and created_at > now() - interval '1 day') >= 5 then
+    raise exception 'Daily suggestion limit reached';
+  end if;
+  return new;
+end;
+$$ language plpgsql;
+
+create trigger suggestions_limit
+  before insert on suggestions
+  for each row execute function limit_suggestions();

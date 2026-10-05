@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { getEateries, getEateryStats } from "../lib/api";
 import EateryCard from "../components/EateryCard";
 import SearchBar from "../components/SearchBar";
 import Meta from "../components/Meta";
-import { SUGGEST_URL } from "../lib/config";
 import { weightedScore } from "../lib/ratings";
 
 const unique = (arr) => [...new Set(arr.filter(Boolean))].sort();
@@ -60,9 +59,9 @@ export default function Eateries() {
       <Meta title="Eateries" description="Browse every eatery in and around UPLB." />
       <h1>Eateries</h1>
 
-      <a className="banner" href={SUGGEST_URL} target="_blank" rel="noreferrer">
-        Can't find your eatery? <b>Suggest an eatery →</b>
-      </a>
+        <Link className="banner" to="/suggest">
+    Can't find your eatery? <b>Suggest an eatery →</b>
+  </Link>
 
       <SearchBar value={q} onChange={(v) => setParam("q", v)} />
 

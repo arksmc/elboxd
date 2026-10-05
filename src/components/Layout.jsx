@@ -17,6 +17,10 @@ export default function Layout({ children }) {
       .catch(console.error);
   }, [user]);
 
+  function handleSignOut() {
+  if (window.confirm("Sign out of TAMIS?")) signOut();
+}
+
   return (
     <>
       <header className="site-header">
@@ -34,7 +38,7 @@ export default function Layout({ children }) {
                   My profile
                 </Link>
               )}
-              <button className="link-btn" onClick={signOut}>Sign out</button>
+              <button className="link-btn" onClick={handleSignOut}>Sign out</button>
             </>
           ) : (
             <Link to="/login" className="link-btn">Sign in</Link>
