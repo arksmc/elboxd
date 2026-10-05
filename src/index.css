@@ -434,3 +434,8 @@ html, body { max-width: 100%; overflow-x: hidden; }
 
 .review .form { margin: 0.75rem 0 0; }
 .review .link-btn { color: var(--link); }
+
+.person { display: flex; align-items: center; gap: 0.75rem; }
+.avatar-sm { width: 44px; aspect-ratio: 1; font-size: 1.2rem; flex-shrink: 0; }
+.person h3 { font-size: 1rem; }
+.person .muted { margin: 0; }

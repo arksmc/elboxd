@@ -258,3 +258,18 @@ export async function addEatery(row) {
   const { error } = await supabase.from("eateries").insert(row);
   if (error) throw error;
 }
+
+export async function searchProfiles(q, limit = 20) {
+  let query = supabase
+    .from("public_profiles")
+    .select("nickname, review_count, avg_rating, total_likes")
+    .limit(limit);
+
+  const term = q.trim();
+  if (term) query = query.ilike("nickname", `%${term}%`);
+  else query = query.order("review_count", { ascending: false });
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return data;
+}

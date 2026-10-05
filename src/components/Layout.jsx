@@ -35,6 +35,7 @@ function handleSignOut() {
           <Link to="/" className="brand"><span className="logo">T</span>TAMIS</Link>
           <nav className="nav">
             <NavLink to="/eateries">Eateries</NavLink>
+            <NavLink to="/people">People</NavLink>
             <a href="/#reviews">Reviews</a>
             <a href="/#lists">Lists</a>
           </nav>

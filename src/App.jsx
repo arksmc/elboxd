@@ -10,6 +10,7 @@ import Terms from "./pages/Terms";
 import Profile from "./pages/Profile";
 import Suggest from "./pages/Suggest";
 import Admin from "./pages/Admin";
+import People from ".pages/People";
 
 
 export default function App() {
@@ -25,7 +26,8 @@ export default function App() {
         <Route path="/u/:nickname" element={<Profile />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/suggest" element={<Suggest />} />.
+        <Route path="/suggest" element={<Suggest />} />
+        <Route path="/people" element={<People />} />
       </Routes>
     </Layout>
   );
