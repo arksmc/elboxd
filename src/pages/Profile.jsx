@@ -7,6 +7,9 @@ import useUser from "../lib/useUser";
 import StarRating from "../components/StarRating";
 import Meta from "../components/Meta";
 import { formatDate } from "../lib/format";
+import {
+    getFavoritesByNickname, setFavorite, removeFavorite
+} from "../lib/api";
 
 const label = (e) => (e.branch ? `${e.name} ${e.branch}` : e.name);
 
@@ -22,14 +25,17 @@ export default function Profile() {
   const [editing, setEditing] = useState(false);
   const [newName, setNewName] = useState("");
   const [error, setError] = useState("");
+  const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     setLoading(true);
-    Promise.all([getPublicProfile(nickname), getReviewsByNickname(nickname), getEateries()])
-      .then(([p, r, e]) => { setProfile(p); setReviews(r); setEateries(e); })
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, [nickname]);
+    Promise.all([
+  getPublicProfile(nickname),
+  getReviewsByNickname(nickname),
+  getEateries(),
+  getFavoritesByNickname(nickname),
+])
+  .then(([p, r, e, f]) => { setProfile(p); setReviews(r); setEateries(e); setFavorites(f); })
 
   useEffect(() => {
     if (!user) { setMyNickname(null); return; }
@@ -65,6 +71,18 @@ export default function Profile() {
   const byId = Object.fromEntries(eateries.map((e) => [e.id, e]));
   const isMine = user && myNickname === nickname;
   const joined = new Date(profile.created_at).toLocaleDateString("en-PH", { month: "long", year: "numeric" });
+  const favBySlot = Object.fromEntries(favorites.map((f) => [f.position, byId[f.eatery_id]]));
+
+async function handleFavorite(position, value) {
+  try {
+    if (value) await setFavorite(user.id, position, Number(value));
+    else await removeFavorite(user.id, position);
+    setFavorites(await getFavoritesByNickname(nickname));
+  } catch (err) {
+    console.error(err);
+    alert(err.code === "23505" ? "That place is already in your top 4." : "Couldn't save. Try again.");
+  }
+}
 
   return (
     <main>
@@ -96,6 +114,38 @@ export default function Profile() {
           </div>
         </form>
       )}
+
+      {(isMine || favorites.length > 0) && (
+  <>
+    <div className="section-head"><h2>Top 4</h2></div>
+    <div className="top4">
+      {[1, 2, 3, 4].map((pos) => {
+        const e = favBySlot[pos];
+        if (!e && !isMine) return null;
+        return (
+          <div key={pos} className="top4-slot">
+            {e ? (
+              <Link to={`/eatery/${e.slug}`} className="mini">
+                <div className="tile">{e.name[0]}</div>
+                <strong>{label(e)}</strong>
+              </Link>
+            ) : (
+              <div className="tile tile-empty">+</div>
+            )}
+            {isMine && (
+              <select value={e?.id ?? ""} onChange={(ev) => handleFavorite(pos, ev.target.value)}>
+                <option value="">None</option>
+                {eateries.map((x) => (
+                  <option key={x.id} value={x.id}>{label(x)}</option>
+                ))}
+              </select>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  </>
+)}
 
       <div className="section-head"><h2>Reviews</h2></div>
       {reviews.length === 0 ? (

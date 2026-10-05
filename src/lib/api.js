@@ -145,3 +145,23 @@ export async function updateNickname(userId, nickname) {
     .from("profiles").update({ nickname }).eq("user_id", userId);
   if (error) throw error;
 }
+
+export async function getFavoritesByNickname(nickname) {
+  const { data, error } = await supabase
+    .from("public_favorites").select("position, eatery_id").eq("nickname", nickname);
+  if (error) throw error;
+  return data;
+}
+
+export async function setFavorite(userId, position, eateryId) {
+  const { error } = await supabase
+    .from("favorites")
+    .upsert({ user_id: userId, position, eatery_id: eateryId }, { onConflict: "user_id,position" });
+  if (error) throw error;
+}
+
+export async function removeFavorite(userId, position) {
+  const { error } = await supabase
+    .from("favorites").delete().eq("user_id", userId).eq("position", position);
+  if (error) throw error;
+}

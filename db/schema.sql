@@ -137,3 +137,30 @@ left join reviews r on r.user_id = p.user_id and r.hidden = false
 group by p.user_id, p.nickname, p.created_at;
 
 grant select on public_profiles to anon, authenticated;
+
+create table favorites (
+  user_id uuid not null references auth.users(id) on delete cascade,
+  position int not null check (position between 1 and 4),
+  eatery_id bigint not null references eateries(id) on delete cascade,
+  primary key (user_id, position),
+  unique (user_id, eatery_id)
+);
+
+alter table favorites enable row level security;
+
+create policy "Users read own favorites"
+  on favorites for select using (auth.uid() = user_id);
+create policy "Users insert own favorites"
+  on favorites for insert with check (auth.uid() = user_id);
+create policy "Users update own favorites"
+  on favorites for update using (auth.uid() = user_id);
+create policy "Users delete own favorites"
+  on favorites for delete using (auth.uid() = user_id);
+
+-- Public view: nickname only, no user_id
+create view public_favorites as
+select p.nickname, f.position, f.eatery_id
+from favorites f
+join profiles p on p.user_id = f.user_id;
+
+grant select on public_favorites to anon, authenticated;
