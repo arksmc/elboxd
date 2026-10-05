@@ -124,3 +124,24 @@ export async function reportReview({ reviewId, reason, note }) {
   });
   if (error) throw error;
 }
+
+export async function getPublicProfile(nickname) {
+  const { data, error } = await supabase
+    .from("public_profiles").select("*").eq("nickname", nickname).maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+export async function getReviewsByNickname(nickname) {
+  const { data, error } = await supabase
+    .from("public_reviews").select("*").eq("nickname", nickname)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data;
+}
+
+export async function updateNickname(userId, nickname) {
+  const { error } = await supabase
+    .from("profiles").update({ nickname }).eq("user_id", userId);
+  if (error) throw error;
+}

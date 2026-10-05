@@ -298,7 +298,6 @@ html, body { max-width: 100%; overflow-x: hidden; }
 @media (max-width: 700px) {
   /* Header: brand + actions on row 1, nav on row 2 */
   .header-inner { flex-wrap: wrap; gap: 0.5rem 0.75rem; padding: 0.6rem 1rem; }
-  .dots { display: none; }
   .brand { margin-right: auto; }
   .nav {
     order: 3; width: 100%; margin-left: 0;
@@ -368,3 +367,8 @@ html, body { max-width: 100%; overflow-x: hidden; }
 }
 
   .row6 { grid-template-columns: repeat(auto-fill, minmax(clamp(84px, 26vw, 150px), 1fr)); }
+
+  .profile-head { display: flex; gap: 1rem; align-items: center; margin: 1.5rem 0 0.5rem; }
+.profile-head h1 { margin: 0; }
+.avatar { width: 72px; aspect-ratio: 1; font-size: 2rem; flex-shrink: 0; }
+.profile-head .link-btn { color: var(--link); padding: 0; }

@@ -7,6 +7,8 @@ import Eateries from "./pages/Eateries";
 import Login from "./pages/Login";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import Profile from "./pages/Profile";
+
 
 export default function App() {
   return (
@@ -18,6 +20,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/u/:nickname" element={<Profile />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>

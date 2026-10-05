@@ -1,6 +1,7 @@
 import StarRating from "./StarRating";
 import ReportButton from "./ReportButton";
 import { formatDate } from "../lib/format";
+import { Link } from "react-router-dom";
 
 export default function ReviewList({ reviews, canReport = false }) {
   if (!reviews.length)
@@ -10,7 +11,9 @@ export default function ReviewList({ reviews, canReport = false }) {
       {reviews.map((r) => (
         <li key={r.id} className="review">
           <div className="review-head">
-            <strong>{r.nickname}</strong>
+            <strong>
+  {r.nickname === "Anonymous" ? r.nickname : <Link to={`/u/${encodeURIComponent(r.nickname)}`}>{r.nickname}</Link>}
+</strong>
             <StarRating value={r.rating} />
           </div>
           <p>{r.body}</p>
