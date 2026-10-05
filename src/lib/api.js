@@ -165,3 +165,33 @@ export async function removeFavorite(userId, position) {
     .from("favorites").delete().eq("user_id", userId).eq("position", position);
   if (error) throw error;
 }
+
+export async function getMyLikes(userId) {
+  const { data, error } = await supabase
+    .from("review_likes").select("review_id").eq("user_id", userId);
+  if (error) throw error;
+  return new Set(data.map((l) => l.review_id));
+}
+
+export async function likeReview(reviewId, userId) {
+  const { error } = await supabase
+    .from("review_likes").insert({ review_id: reviewId, user_id: userId });
+  if (error) throw error;
+}
+
+export async function unlikeReview(reviewId, userId) {
+  const { error } = await supabase
+    .from("review_likes").delete().eq("review_id", reviewId).eq("user_id", userId);
+  if (error) throw error;
+}
+
+export async function getTopReviews(limit = 6) {
+  const { data, error } = await supabase
+    .from("public_reviews").select("*")
+    .gt("like_count", 0)
+    .order("like_count", { ascending: false })
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (error) throw error;
+  return data;
+}

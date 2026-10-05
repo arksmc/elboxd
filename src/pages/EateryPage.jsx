@@ -8,6 +8,7 @@ import {
   upsertReview,
   getMyReview,
   deleteMyReview,
+  getMyLikes,
 } from "../lib/api";
 import ReviewList from "../components/ReviewList";
 import ReviewForm from "../components/ReviewForm";
@@ -32,6 +33,7 @@ export default function EateryPage() {
   const [nickname, setNickname] = useState(null);
   const [profileLoaded, setProfileLoaded] = useState(false);
   const [myReview, setMyReview] = useState(null);
+  const [myLikes, setMyLikes] = useState(new Set());
 
   // 2. then effects
   useEffect(() => {
@@ -82,6 +84,14 @@ export default function EateryPage() {
     loadData();
     return () => { isMounted = false; };
   }, [slug]);
+
+  useEffect(() => {
+  if (!user) {
+    setMyLikes(new Set());
+    return;
+  }
+  getMyLikes(user.id).then(setMyLikes).catch(console.error);
+}, [user]);
 
   // 3. early returns only after every hook
   if (loading) return <p>Loading...</p>;
@@ -196,7 +206,7 @@ export default function EateryPage() {
           )}
 
           <div className="section-head"><h2>Recent reviews</h2></div>
-          <ReviewList reviews={reviews} canReport={Boolean(user)} />
+          <ReviewList reviews={reviews} canReport={Boolean(user)} likedIds={myLikes} />
 
           {branches.length > 0 && (
             <>

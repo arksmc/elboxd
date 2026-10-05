@@ -6,7 +6,7 @@ import StarRating from "../components/StarRating";
 import Meta from "../components/Meta";
 import { formatDate } from "../lib/format";
 import { SUGGEST_URL } from "../lib/config";
-import { getEateries, getRecentReviews, getEateryStats } from "../lib/api";
+import { getEateries, getRecentReviews, getEateryStats, getTopReviews } from "../lib/api";
 import { weightedScore } from "../lib/ratings";
 
 const label = (e) => (e.branch ? `${e.name} ${e.branch}` : e.name);
@@ -16,11 +16,13 @@ export default function Home() {
   const [reviews, setReviews] = useState([]);
   const [query, setQuery] = useState("");
   const [stats, setStats] = useState({});
+  const [top, setTop] = useState([]);
 
   useEffect(() => {
   getEateries().then(setEateries);
   getRecentReviews(5).then(setReviews);
   getEateryStats().then(setStats).catch(console.error);
+  getTopReviews(6).then(setTop).catch(console.error);
 }, []);
 
 const popular = [...eateries]
@@ -91,24 +93,29 @@ const popular = [...eateries]
 ))}
           </div>
 
-          <div className="section-head"><h2>Popular reviews</h2></div>
-          <div className="two-col">
-            {reviews.slice(0, 5).map((r) => {
-              const e = byId[r.eatery_id];
-              return e && (
-                <article key={r.id} className="review">
-                  <div className="review-head">
-                    <div>
-                      <strong>{label(e)}</strong>
-                      <p className="muted">by {r.nickname}</p>
-                    </div>
-                    <StarRating value={r.rating} />
-                  </div>
-                  <p>{r.body}</p>
-                </article>
-              );
-            })}
-          </div>
+          {top.length > 0 && (
+  <>
+    <div className="section-head"><h2>Most liked reviews</h2></div>
+    <div className="two-col">
+      {top.map((r) => {
+        const e = byId[r.eatery_id];
+        return e && (
+          <Link key={r.id} to={`/eatery/${e.slug}`} className="review">
+            <div className="review-head">
+              <div>
+                <strong>{label(e)}</strong>
+                <p className="muted">by {r.nickname}</p>
+              </div>
+              <StarRating value={r.rating} />
+            </div>
+            <p>{r.body}</p>
+            <small className="muted">♥ {r.like_count}</small>
+          </Link>
+        );
+      })}
+    </div>
+  </>
+)}
 
           <div className="section-head" id="lists"><h2>Popular lists</h2></div>
           <div className="banner">Curated lists like "Best budget meals near Raymundo" are coming soon.</div>

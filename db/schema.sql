@@ -164,3 +164,37 @@ from favorites f
 join profiles p on p.user_id = f.user_id;
 
 grant select on public_favorites to anon, authenticated;
+
+create table review_likes (
+  review_id bigint not null references reviews(id) on delete cascade,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  primary key (review_id, user_id)
+);
+
+alter table review_likes enable row level security;
+
+create policy "Users read own likes"
+  on review_likes for select using (auth.uid() = user_id);
+
+-- Like, but not your own review
+create policy "Users like others' reviews"
+  on review_likes for insert with check (
+    auth.uid() = user_id
+    and not exists (
+      select 1 from reviews r where r.id = review_id and r.user_id = auth.uid()
+    )
+  );
+
+create policy "Users unlike"
+  on review_likes for delete using (auth.uid() = user_id);
+
+-- Adds like_count at the end, so nothing else needs rebuilding
+create or replace view public_reviews as
+select
+  r.id, r.eatery_id, r.rating, r.body, r.created_at,
+  coalesce(p.nickname, 'Anonymous') as nickname,
+  (select count(*) from review_likes l where l.review_id = r.id)::int as like_count
+from reviews r
+left join profiles p on p.user_id = r.user_id
+where r.hidden = false;
