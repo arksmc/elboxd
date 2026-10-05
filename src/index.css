@@ -323,3 +323,13 @@ html, body { max-width: 100%; overflow-x: hidden; }
 
   .footer-inner { flex-direction: column; gap: 0.4rem; }
 }
+/* Half stars */
+.s, .star-btn { color: #4a5057; }
+.s.full, .star-btn.full { color: var(--star); }
+.s.half, .star-btn.half {
+  background: linear-gradient(90deg, var(--star) 50%, #4a5057 50%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hist-row { grid-template-columns: 2.6rem 1fr 2rem; }

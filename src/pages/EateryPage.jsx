@@ -145,7 +145,7 @@ export default function EateryPage() {
               {average && <StarRating value={average} />}
             </div>
             <div className="hist">
-              {[5, 4, 3, 2, 1].map((n) => (
+              {[5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5].map((n) => (
                 <div key={n} className="hist-row">
                   <span>{n}★</span>
                   <div className="hist-bar">

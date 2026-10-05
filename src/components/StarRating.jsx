@@ -1,9 +1,10 @@
 export default function StarRating({ value }) {
-  const full = Math.round(value);
+  const v = Math.round(value * 2) / 2;
   return (
-    <span aria-label={`${value} out of 5`} className="stars-display ">
-      {"★".repeat(full)}
-      {"☆".repeat(5 - full)}
+    <span className="stars-display" aria-label={`${value} out of 5`}>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <span key={n} className={v >= n ? "s full" : v >= n - 0.5 ? "s half" : "s"}>★</span>
+      ))}
     </span>
   );
 }

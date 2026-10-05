@@ -5,7 +5,8 @@ export function getAverage(reviews) {
 }
 
 export function getDistribution(reviews) {
-  const counts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-  reviews.forEach((r) => { counts[r.rating] += 1; });
+  const counts = {};
+  for (let n = 0.5; n <= 5; n += 0.5) counts[n] = 0;
+  reviews.forEach((r) => { counts[Number(r.rating)] += 1; });
   return counts;
 }
