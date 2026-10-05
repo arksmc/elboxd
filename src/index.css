@@ -380,3 +380,11 @@ html, body { max-width: 100%; overflow-x: hidden; }
   width: 100%; min-width: 0; background: var(--card); color: var(--text);
   border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem; font-size: 16px;
 }
+
+.foot-left { display: flex; align-items: center; gap: 0.75rem; }
+.like-btn {
+  background: none; border: 1px solid var(--border); color: var(--muted);
+  border-radius: 999px; padding: 0.15rem 0.7rem; cursor: pointer; font: inherit; font-size: 0.85rem;
+}
+.like-btn:hover { border-color: var(--link); color: var(--link); }
+.like-btn.on { color: var(--link); border-color: var(--link); }
