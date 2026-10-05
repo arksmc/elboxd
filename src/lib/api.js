@@ -92,3 +92,23 @@ export async function signInWithGoogle() {
   });
   if (error) throw error;
 }
+
+export async function getMyReview(eateryId, userId) {
+  const { data, error } = await supabase
+    .from("reviews")
+    .select("rating, body")
+    .eq("eatery_id", eateryId)
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteMyReview(eateryId, userId) {
+  const { error } = await supabase
+    .from("reviews")
+    .delete()
+    .eq("eatery_id", eateryId)
+    .eq("user_id", userId);
+  if (error) throw error;
+}

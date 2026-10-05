@@ -1,29 +1,39 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import ReviewList from "../components/ReviewList";
-import ReviewForm from "../components/ReviewForm";
-import LoginForm from "../components/LoginForm";
-import StarRating from "../components/StarRating";
-import Meta from "../components/Meta";
-import useUser from "../lib/useUser";
-import { getAverage, getDistribution } from "../lib/ratings";
-import NicknameForm from "../components/NicknameForm";
 import {
   getEateries,
   getEateryBySlug,
   getReviewsByEateryId,
   getMyProfile,
   upsertReview,
+  getMyReview,
+  deleteMyReview,
 } from "../lib/api";
+import ReviewList from "../components/ReviewList";
+import ReviewForm from "../components/ReviewForm";
+import LoginForm from "../components/LoginForm";
+import NicknameForm from "../components/NicknameForm";
+import StarRating from "../components/StarRating";
+import Meta from "../components/Meta";
+import useUser from "../lib/useUser";
+import { getAverage, getDistribution } from "../lib/ratings";
 
 const label = (e) => (e.branch ? `${e.name} ${e.branch}` : e.name);
 
 export default function EateryPage() {
   const { slug } = useParams();
   const { user } = useUser();
+
+  // 1. all state first
+  const [eatery, setEatery] = useState(null);
+  const [all, setAll] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [nickname, setNickname] = useState(null);
   const [profileLoaded, setProfileLoaded] = useState(false);
+  const [myReview, setMyReview] = useState(null);
 
+  // 2. then effects
   useEffect(() => {
     if (!user) {
       setNickname(null);
@@ -37,10 +47,13 @@ export default function EateryPage() {
     });
   }, [user]);
 
-  const [eatery, setEatery] = useState(null);
-  const [all, setAll] = useState([]);
-  const [reviews, setReviews] = useState([]);
-  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    if (!user || !eatery) {
+      setMyReview(null);
+      return;
+    }
+    getMyReview(eatery.id, user.id).then(setMyReview).catch(console.error);
+  }, [user, eatery]);
 
   useEffect(() => {
     let isMounted = true;
@@ -70,6 +83,7 @@ export default function EateryPage() {
     return () => { isMounted = false; };
   }, [slug]);
 
+  // 3. early returns only after every hook
   if (loading) return <p>Loading...</p>;
   if (!eatery) return <p>Eatery not found. <Link to="/" className="back">Back home</Link></p>;
 
@@ -85,18 +99,26 @@ export default function EateryPage() {
     .slice(0, 6);
 
   async function handleAddReview({ rating, body }) {
-  try {
-    await upsertReview({
-      eateryId: eatery.id,
-      userId: user.id,
-      rating,
-      body,
-    });
-    setReviews(await getReviewsByEateryId(eatery.id));
-  } catch (err) {
-    console.error(err);
-    alert("Couldn't save your review. Try again.");
+    try {
+      await upsertReview({ eateryId: eatery.id, userId: user.id, rating, body });
+      setReviews(await getReviewsByEateryId(eatery.id));
+      setMyReview({ rating, body });
+    } catch (err) {
+      console.error(err);
+      alert("Couldn't save your review. Try again.");
+    }
   }
+
+  async function handleDeleteReview() {
+    if (!window.confirm("Delete your review?")) return;
+    try {
+      await deleteMyReview(eatery.id, user.id);
+      setReviews(await getReviewsByEateryId(eatery.id));
+      setMyReview(null);
+    } catch (err) {
+      console.error(err);
+      alert("Couldn't delete your review. Try again.");
+    }
   }
 
   const MiniRow = ({ items }) => (
@@ -132,7 +154,7 @@ export default function EateryPage() {
         </aside>
 
         <div className="detail-main">
-          <Link to="/" className="back">← All eateries</Link>
+          <Link to="/eateries" className="back">← All eateries</Link>
           <h1>{title}</h1>
           <div className="pills">
             <span className="tag">{eatery.area}</span>
@@ -165,7 +187,12 @@ export default function EateryPage() {
           ) : !nickname ? (
             <NicknameForm userId={user.id} onDone={setNickname} />
           ) : (
-            <ReviewForm onSubmit={handleAddReview} />
+            <ReviewForm
+              key={myReview ? "edit" : "new"}
+              initial={myReview}
+              onSubmit={handleAddReview}
+              onDelete={handleDeleteReview}
+            />
           )}
 
           <div className="section-head"><h2>Recent reviews</h2></div>
