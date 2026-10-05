@@ -85,3 +85,20 @@ from public_reviews
 group by eatery_id;
 
 grant select on eatery_stats to anon, authenticated;
+
+-- Reports: users flag reviews; only the admin reads them (no select policy)
+create table reports (
+  id bigint generated always as identity primary key,
+  review_id bigint not null references reviews(id) on delete cascade,
+  reporter_id uuid not null references auth.users(id) on delete cascade,
+  reason text not null check (reason in ('spam', 'abusive', 'fake', 'private', 'other')),
+  note text check (char_length(note) <= 500),
+  status text not null default 'open',
+  created_at timestamptz not null default now(),
+  unique (review_id, reporter_id)
+);
+
+alter table reports enable row level security;
+
+create policy "Users file reports"
+  on reports for insert with check (auth.uid() = reporter_id);
