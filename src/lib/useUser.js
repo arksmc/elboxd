@@ -6,13 +6,17 @@ export default function useUser() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Keep the same object if it's the same person, so effects don't refire
+    const update = (next) =>
+      setUser((prev) => (prev?.id === (next?.id ?? undefined) ? prev : next ?? null));
+
     supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user ?? null);
+      update(data.session?.user ?? null);
       setLoading(false);
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => setUser(session?.user ?? null)
+      (_event, session) => update(session?.user ?? null)
     );
 
     return () => listener.subscription.unsubscribe();
