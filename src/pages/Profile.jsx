@@ -99,7 +99,7 @@ async function handleFavorite(position, value) {
   return (
     <main>
       <Meta title={profile.nickname} description={`Reviews by ${profile.nickname}`} />
-      <div className={"profile-head" + (badges.some((b) => b.code === "lori") ? " profile-lori" : "")}>
+      <div className={"profile-head" + (badges[0] ? ` profile-${badges[0].code}` : "")}>
         <div className="tile avatar">{profile.nickname[0].toUpperCase()}</div>
         <div>
           <h1>{profile.nickname}</h1>

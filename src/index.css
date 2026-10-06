@@ -475,3 +475,23 @@ html, body { max-width: 100%; overflow-x: hidden; }
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45); z-index: 20;
   }
 }
+
+/* Iesou: sky blue, with glow */
+.badge-iesou {
+  color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(110deg, #0284c7 0%, #38bdf8 40%, #e0f2fe 50%, #38bdf8 60%, #0284c7 100%);
+  background-size: 250% 100%;
+  animation: shimmer 3s linear infinite;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.55);
+}
+@media (prefers-reduced-motion: reduce) { .badge-iesou { animation: none; } }
+
+.review.has-badge-iesou { border-color: rgba(56, 189, 248, 0.55); box-shadow: 0 0 14px rgba(56, 189, 248, 0.15); }
+
+.person-iesou { border-color: rgba(56, 189, 248, 0.55); box-shadow: 0 0 14px rgba(56, 189, 248, 0.15); }
+.person-iesou .avatar-sm,
+.profile-iesou .avatar {
+  background: linear-gradient(160deg, #0284c7, #38bdf8);
+  border-color: #7dd3fc;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.35), 0 0 22px rgba(56, 189, 248, 0.6);
+}
