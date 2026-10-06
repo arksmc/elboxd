@@ -71,6 +71,7 @@ function handleSignOut() {
           </span>
         </div>
       </footer>
+      <Link to="/eateries" className="fab" aria-label="Write a review">+</Link>
     </>
   );
 }

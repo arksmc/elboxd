@@ -456,3 +456,22 @@ html, body { max-width: 100%; overflow-x: hidden; }
   border-color: #c084fc;
   box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.35), 0 0 16px rgba(168, 85, 247, 0.6);
 }
+
+@media (max-width: 700px) {
+  .form-actions { flex-direction: column; align-items: stretch; gap: 0.9rem; }
+  .form-actions .btn,
+  .form-actions .link-btn.danger { width: 100%; align-self: stretch; text-align: center; }
+}
+
+.fab { display: none; }
+
+@media (max-width: 700px) {
+  .header-inner .pill { display: none; }
+  .fab {
+    display: grid; place-items: center;
+    position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-size: 2rem; line-height: 1;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45); z-index: 20;
+  }
+}
