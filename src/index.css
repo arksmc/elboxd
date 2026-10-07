@@ -497,3 +497,8 @@ html, body { max-width: 100%; overflow-x: hidden; }
 }
 
 .logo-img { height: 26px; width: auto; display: block; }
+/* Laptop and tablet: 5 in a row, hide the 6th */
+@media (min-width: 701px) {
+  .row-cap { grid-template-columns: repeat(5, 1fr); }
+  .row-cap > :nth-child(n + 6) { display: none; }
+}
