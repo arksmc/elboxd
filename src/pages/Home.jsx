@@ -44,8 +44,8 @@ const popular = [...eateries]
     <main>
       <Meta />
       <section className="hero">
-  <h1>See what others think of UPLB eateries.</h1>
-  <p>Real reviews from students, posted under nicknames.</p>
+  <h1>The word on ELbi's food.</h1>
+  <p>Real vouches from fellow students.</p>
   <SearchBar value={query} onChange={setQuery} />
 </section>
       {query ? (
@@ -58,7 +58,7 @@ const popular = [...eateries]
       ) : (
         <>
           <div className="section-head" id="reviews">
-  <h2>Recent reviews</h2>
+  <h2>Recent vouches</h2>
   <Link to="/reviews" className="see-all">See all →</Link>
 </div>
           <div className="row6">
@@ -76,10 +76,10 @@ const popular = [...eateries]
           </div>
 
             <Link className="banner" to="/suggest">
-    Know a place we're missing? <b>Suggest an eatery →</b>
+    Favorite kainan missing? <b>Suggest it here →</b>
   </Link>
 
-          <div className="section-head"><h2>Popular eateries</h2></div>
+          <div className="section-head"><h2>Popular vouches</h2></div>
           <div className="row6">
             {popular.map((e) => (
   <Link key={e.id} to={`/eatery/${e.slug}`} className="mini">
@@ -94,7 +94,7 @@ const popular = [...eateries]
 
           {top.length > 0 && (
   <>
-    <div className="section-head"><h2>Most liked reviews</h2> <Link to="/reviews" className="see-all">See all →</Link></div>
+    <div className="section-head"><h2>Most liked vouches</h2> <Link to="/reviews" className="see-all">See all →</Link></div>
     <div className="two-col">
       {top.map((r) => {
         const e = byId[r.eatery_id];
