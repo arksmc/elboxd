@@ -221,9 +221,6 @@ export default function EateryPage() {
               <MiniRow items={nearby} />
             </>
           )}
-
-          <div className="section-head"><h2>Popular lists</h2></div>
-          <div className="banner">Lists are coming soon.</div>
         </div>
       </div>
     </main>

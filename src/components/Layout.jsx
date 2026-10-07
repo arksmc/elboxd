@@ -38,7 +38,6 @@ function handleSignOut() {
             <NavLink to="/eateries">Eateries</NavLink>
             <NavLink to="/people">People</NavLink>
             <NavLink to="/reviews">Reviews</NavLink>
-            <a href="/#lists">Lists</a>
           </nav>
           {!loading && (user ? (
   <>
