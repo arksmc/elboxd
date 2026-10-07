@@ -67,6 +67,8 @@ export default function Privacy() {
       <p>
         This Privacy Policy may be updated as Vouch changes or adds features.
       </p>
+
+      <p className="muted">Last updated: October 2026</p>
     </main>
   );
 }
