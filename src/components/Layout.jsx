@@ -32,7 +32,7 @@ function handleSignOut() {
     <>
       <header className="site-header">
         <div className="header-inner">
-          <Link to="/" className="brand"><img src="/logo.png" alt="" className="logo-img" />
+          <Link to="/" className="brand"><img src="/logo.svg" alt="" className="logo-img" />
 <span>VOUCH</span></Link>
           <nav className="nav">
             <NavLink to="/eateries">Eateries</NavLink>
