@@ -44,7 +44,7 @@ const popular = [...eateries]
     <main>
       <Meta />
       <section className="hero">
-  <h1>The word on ELbi's food.</h1>
+  <h1>The word on Elbi's food.</h1>
   <p>Real vouches from fellow students.</p>
   <SearchBar value={query} onChange={setQuery} />
 </section>
