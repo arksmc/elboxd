@@ -61,7 +61,7 @@ const popular = [...eateries]
   <h2>Recent vouches</h2>
   <Link to="/reviews" className="see-all">See all →</Link>
 </div>
-          <div className="row6">
+          <div className="row6 row-cap">
             {reviews.map((r) => {
               const e = byId[r.eatery_id];
               return e && (
@@ -80,7 +80,7 @@ const popular = [...eateries]
   </Link>
 
           <div className="section-head"><h2>Popular vouches</h2></div>
-          <div className="row6">
+          <div className="row6 row-cap">
             {popular.map((e) => (
   <Link key={e.id} to={`/eatery/${e.slug}`} className="mini">
     <div className="tile">{e.name[0]}</div>
