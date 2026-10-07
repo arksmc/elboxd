@@ -60,7 +60,7 @@ export default function Eateries() {
       <h1>Eateries</h1>
 
         <Link className="banner" to="/suggest">
-    Can't find your eatery? <b>Suggest an eatery →</b>
+    Favorite kainan missing? <b>Suggest it here →</b>
   </Link>
 
       <SearchBar value={q} onChange={(v) => setParam("q", v)} />

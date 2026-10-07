@@ -40,7 +40,7 @@ export default function People() {
       />
 
       <div className="section-head">
-        <h2>{q ? `Results for "${q}"` : "Most active reviewers"}</h2>
+        <h2>{q ? `Results for "${q}"` : "Most active vouchers"}</h2>
       </div>
 
       {loading ? (
