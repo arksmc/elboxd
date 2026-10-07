@@ -32,7 +32,8 @@ function handleSignOut() {
     <>
       <header className="site-header">
         <div className="header-inner">
-          <Link to="/" className="brand"><span className="logo">T</span>TAMIS</Link>
+          <Link to="/" className="brand"><img src="/logo.png" alt="" className="logo-img" />
+<span>VOUCH</span></Link>
           <nav className="nav">
             <NavLink to="/eateries">Eateries</NavLink>
             <NavLink to="/people">People</NavLink>
@@ -63,7 +64,7 @@ function handleSignOut() {
       <div className="container">{children}</div>
       <footer className="site-footer">
         <div className="footer-inner">
-          <span>© TAMIS</span>
+          <span>© VOUCH</span>
           <span className="muted">
             Student-made · Not affiliated with UPLB
             <br />
