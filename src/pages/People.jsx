@@ -29,7 +29,7 @@ export default function People() {
 
   return (
     <main>
-      <Meta title="People" description="Find reviewers on TAMIS." />
+      <Meta title="People" description="Find reviewers on VOUCH." />
       <h1>People</h1>
       <input
         className="search"
