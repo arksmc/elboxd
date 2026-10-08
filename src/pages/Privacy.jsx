@@ -1,4 +1,3 @@
-```jsx
 import Meta from "../components/Meta";
 import "../styles/legal.css";
 
@@ -96,4 +95,3 @@ export default function Privacy() {
     </main>
   );
 }
-```
