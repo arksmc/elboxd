@@ -271,7 +271,7 @@ create trigger reviews_protect_hidden
 
 -- Make yourself admin (use the email you sign in with)
 insert into admins (user_id)
-select id from auth.users where email = 'markcascara70@gmail.com';
+select id from auth.users where email = 'YOUR_EMAIL@gmail.com';
 
 create or replace function limit_suggestions() returns trigger
 language plpgsql security definer set search_path = public as $$

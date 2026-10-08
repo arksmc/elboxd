@@ -305,3 +305,50 @@ export async function getReviewsPage({ sort = "recent", offset = 0, limit = 20 }
   if (error) throw error;
   return data;
 }
+
+export async function createFeedback({ userId, category, message, page }) {
+  const { error } = await supabase.from("feedback").insert({
+    user_id: userId, category, message, page: page || null,
+  });
+  if (error) throw error;
+}
+
+export async function getMyFeedback() {
+  const { data, error } = await supabase
+    .from("my_feedback").select("*").order("created_at", { ascending: false });
+  if (error) throw error;
+  return data;
+}
+
+// admin
+export async function getAllFeedback() {
+  const { data, error } = await supabase
+    .from("feedback").select("*").order("created_at", { ascending: false });
+  if (error) throw error;
+  return data;
+}
+export async function getTopics() {
+  const { data, error } = await supabase
+    .from("feedback_topics").select("*").order("created_at", { ascending: false });
+  if (error) throw error;
+  return data;
+}
+export async function createTopic(title) {
+  const { data, error } = await supabase
+    .from("feedback_topics").insert({ title }).select().single();
+  if (error) throw error;
+  return data;
+}
+export async function assignFeedback(feedbackId, topicId) {
+  const { error } = await supabase
+    .from("feedback").update({ topic_id: topicId }).eq("id", feedbackId);
+  if (error) throw error;
+}
+export async function updateTopic(id, { status, reply }) {
+  const { error } = await supabase.from("feedback_topics").update({
+    status,
+    reply: reply?.trim() || null,
+    replied_at: reply?.trim() ? new Date().toISOString() : null,
+  }).eq("id", id);
+  if (error) throw error;
+}

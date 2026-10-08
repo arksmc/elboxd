@@ -30,6 +30,7 @@ export default function App() {
         <Route path="/suggest" element={<Suggest />} />
         <Route path="/people" element={<People />} />
         <Route path="/reviews" element={<Reviews />} />
+        <Route path="/feedback" element={<Feedback />} />
       </Routes>
     </Layout>
   );

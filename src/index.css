@@ -552,3 +552,6 @@ html, body { max-width: 100%; overflow-x: hidden; }
   width: 52px; height: 52px; margin: 0 auto; border-radius: 50%;
   background: var(--accent); color: #fff; font-size: 1.6rem; display: grid; place-items: center;
 }
+
+.reply { background: var(--bg); border-left: 3px solid var(--accent); padding: 0.5rem 0.75rem; border-radius: 4px; }
+.review .form select { background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem; font: inherit; }

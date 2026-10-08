@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import useUser from "../lib/useUser";
 import {
   checkIsAdmin, getOpenSuggestions, getOpenReports, getEateries,
-  addEatery, setSuggestionStatus, setReportStatus, hideReview,
+  addEatery, setSuggestionStatus, setReportStatus, hideReview, getAllFeedback, getTopics, createTopic, assignFeedback, updateTopic,
 } from "../lib/api";
 import Meta from "../components/Meta";
 
@@ -102,6 +102,100 @@ function ReportRow({ r, byId, onDone }) {
     </li>
   );
 }
+function FeedbackAdmin() {
+  const [items, setItems] = useState([]);
+  const [topics, setTopics] = useState([]);
+  const [drafts, setDrafts] = useState({});
+
+  async function load() {
+    try {
+      const [f, t] = await Promise.all([getAllFeedback(), getTopics()]);
+      setItems(f); setTopics(t);
+    } catch (err) { console.error(err); }
+  }
+  useEffect(() => { load(); }, []);
+
+  const loose = items.filter((i) => !i.topic_id);
+  const countFor = (id) => items.filter((i) => i.topic_id === id).length;
+  const draft = (t) => drafts[t.id] ?? { status: t.status, reply: t.reply ?? "" };
+  const setDraft = (t, patch) => setDrafts({ ...drafts, [t.id]: { ...draft(t), ...patch } });
+
+  async function newTopic(item) {
+    const title = window.prompt("Topic title:", item.message.slice(0, 60));
+    if (!title) return;
+    const t = await createTopic(title.trim());
+    await assignFeedback(item.id, t.id);
+    load();
+  }
+
+  return (
+    <>
+      <div className="section-head"><h2>Feedback topics ({topics.length})</h2></div>
+      {topics.length === 0 ? <p className="banner">No topics yet.</p> : (
+        <ul className="review-list">
+          {topics
+            .slice()
+            .sort((a, b) => countFor(b.id) - countFor(a.id))
+            .map((t) => (
+              <li key={t.id} className="review">
+                <strong>{t.title}</strong>
+                <p className="muted">{countFor(t.id)} request{countFor(t.id) === 1 ? "" : "s"}</p>
+                {items.filter((i) => i.topic_id === t.id).map((i) => (
+                  <p key={i.id} className="muted">· [{i.category}] {i.message}</p>
+                ))}
+                <div className="form">
+                  <select value={draft(t).status} onChange={(e) => setDraft(t, { status: e.target.value })}>
+                    <option value="open">Received</option>
+                    <option value="planned">Planned</option>
+                    <option value="done">Done</option>
+                    <option value="declined">Not planned</option>
+                  </select>
+                  <textarea
+                    placeholder="Reply (everyone in this topic sees it)"
+                    value={draft(t).reply}
+                    onChange={(e) => setDraft(t, { reply: e.target.value })}
+                    maxLength={1000}
+                  />
+                  <button
+                    className="btn"
+                    onClick={async () => { await updateTopic(t.id, draft(t)); load(); }}
+                  >
+                    Save
+                  </button>
+                </div>
+              </li>
+            ))}
+        </ul>
+      )}
+
+      <div className="section-head"><h2>New feedback ({loose.length})</h2></div>
+      {loose.length === 0 ? <p className="banner">Nothing new.</p> : (
+        <ul className="review-list">
+          {loose.map((i) => (
+            <li key={i.id} className="review">
+              <p className="muted">{i.category}{i.page ? ` · ${i.page}` : ""}</p>
+              <p>{i.message}</p>
+              <div className="form-actions">
+                <select
+                  defaultValue=""
+                  onChange={async (e) => {
+                    if (!e.target.value) return;
+                    await assignFeedback(i.id, Number(e.target.value));
+                    load();
+                  }}
+                >
+                  <option value="">Add to topic...</option>
+                  {topics.map((t) => <option key={t.id} value={t.id}>{t.title}</option>)}
+                </select>
+                <button className="link-btn" onClick={() => newTopic(i)}>New topic</button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
+}
 
 export default function Admin() {
   const { user, loading } = useUser();
@@ -148,6 +242,8 @@ export default function Admin() {
           {reports.map((r) => <ReportRow key={r.id} r={r} byId={byId} onDone={load} />)}
         </ul>
       )}
+
+      <FeedbackAdmin />
     </main>
   );
 }
