@@ -1,0 +1,5 @@
+.legal-page { max-width: 800px; margin: 0 auto; }
+.legal-page p { line-height: 1.6; margin-bottom: 1rem; }
+.legal-page h1 { margin-bottom: 1.5rem;text-align:center;  }
+.legal-page h2 { margin-top: 2rem; text-align:center;}
+.legal-page .muted { text-indent: 0; }

@@ -1,8 +1,9 @@
 import Meta from "../components/Meta";
+import "../styles/legal.css";
 
 export default function Privacy() {
   return (
-    <main>
+    <main className="legal-page">
       <Meta title="Privacy" />
 
       <h1>Privacy</h1>
