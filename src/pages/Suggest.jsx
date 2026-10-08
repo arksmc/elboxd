@@ -70,7 +70,7 @@ function closePopup() {
     return (
       <main>
         <Meta title="Suggest an eatery" />
-        <h1>Thanks!</h1>
+        <h1>Thanks for your suggestion!</h1>
         <p className="banner">We'll review your suggestion and add it soon.</p>
         <Link to="/eateries" className="back">← Back to eateries</Link>
       </main>
