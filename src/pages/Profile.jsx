@@ -143,86 +143,49 @@ async function act(fn, name) {
     <main>
       <Meta title={profile.nickname} description={`Reviews by ${profile.nickname}`} />
       <div className={"profile-head" + (badges[0] ? ` profile-${badges[0].code}` : "")}>
-        <div className="tile avatar">{profile.nickname[0].toUpperCase()}</div>
-        <div>
-          <h1>{profile.nickname}</h1>
-<div>
-  {badges.map((b) => (
-    <Badge key={b.code} code={b.code} emoji={b.emoji} label={b.label} full />
-  ))}
-</div>
-          <p className="muted">
-  Joined {joined} · {profile.review_count} reviews
-  {profile.avg_rating ? ` · avg ${profile.avg_rating}★` : ""}
-  {` · ♥ ${profile.total_likes}`}
-</p>
+  <div className="tile avatar">{profile.nickname[0].toUpperCase()}</div>
 
-<p className="muted">
-  {profile.follower_count} followers · {profile.following_count} following
-</p>
-{user && myNickname && !isMine && (
-  <button className={isFollowing ? "btn btn-outline" : "btn"} onClick={toggleFollow} disabled={busy}>
-    {isFollowing ? "Following" : "Follow"}
-  </button>
-)}
-          {isMine && !editing && (
-            <button className="link-btn danger-free" onClick={() => { setEditing(true); setNewName(nickname); }}>
-              Edit nickname
-            </button>
-
-            
-          )}
-        </div>
-      </div>
-
-      {isMine && editing && (
-        <form className="form" onSubmit={handleRename}>
-          <p className="muted">You can change your nickname once every 30 days.</p>
-          <input value={newName} onChange={(e) => setNewName(e.target.value)} maxLength={20} />
-          {error && <p className="error">{error}</p>}
-          <div className="form-actions">
-            <button className="btn" type="submit">Save</button>
-            <button className="link-btn" type="button" onClick={() => { setEditing(false); setError(""); }}>Cancel</button>
-          </div>
-        </form>
-      )}
-
-      {isMine && (
-  <>
-    <div className="tabs">
-      <button className={panel === "followers" ? "tab on" : "tab"}
-        onClick={() => setPanel(panel === "followers" ? null : "followers")}>
-        Followers ({followers.length})
+  <div className="profile-info">
+    <h1>{profile.nickname}</h1>
+    <div>
+      {badges.map((b) => (
+        <Badge key={b.code} code={b.code} emoji={b.emoji} label={b.label} full />
+      ))}
+    </div>
+    <p className="muted">
+      Joined {joined} · {profile.review_count} reviews
+      {profile.avg_rating ? ` · avg ${profile.avg_rating}★` : ""}
+      {` · ♥ ${profile.total_likes}`}
+    </p>
+    <p className="muted">
+      {profile.follower_count} followers · {profile.following_count} following
+    </p>
+    {isMine && !editing && (
+      <button className="link-btn" onClick={() => { setEditing(true); setNewName(nickname); }}>
+        Edit nickname
       </button>
-      <button className={panel === "following" ? "tab on" : "tab"}
-        onClick={() => setPanel(panel === "following" ? null : "following")}>
-        Following ({following.length})
+    )}
+  </div>
+
+  {user && myNickname && !isMine && (
+    <div className="profile-actions">
+      <button
+        className={"follow-btn" + (isFollowing ? " following" : "")}
+        onClick={toggleFollow}
+        disabled={busy}
+      >
+        {isFollowing ? (
+          <>
+            <span className="f-on">Following</span>
+            <span className="f-off">Unfollow</span>
+          </>
+        ) : (
+          "Follow"
+        )}
       </button>
     </div>
-    {panel && (
-      <ul className="review-list">
-        {(panel === "followers" ? followers : following).length === 0 && (
-          <li className="banner">
-            {panel === "followers" ? "No followers yet." : <>You aren't following anyone. <Link to="/people"><b>Find people</b></Link></>}
-          </li>
-        )}
-        {(panel === "followers" ? followers : following).map((f) => (
-          <li key={f.nickname} className="review person-row">
-            <Link to={`/u/${encodeURIComponent(f.nickname)}`}><strong>{f.nickname}</strong></Link>
-            {panel === "followers" ? (
-              <button className="link-btn"
-                onClick={() => window.confirm(`Remove ${f.nickname} as a follower?`) && act(removeFollower, f.nickname)}>
-                Remove
-              </button>
-            ) : (
-              <button className="link-btn" onClick={() => act(unfollowUser, f.nickname)}>Unfollow</button>
-            )}
-          </li>
-        ))}
-      </ul>
-    )}
-  </>
-)}
+  )}
+</div>
 
       {(isMine || favorites.length > 0) && (
   <>
