@@ -291,8 +291,35 @@ export async function searchProfiles(q, limit = 20) {
   }));
 }
 
+export async function followUser(nickname) {
+  const { error } = await supabase.rpc("follow_user", { target: nickname });
+  if (error) throw error;
+}
+export async function unfollowUser(nickname) {
+  const { error } = await supabase.rpc("unfollow_user", { target: nickname });
+  if (error) throw error;
+}
+export async function removeFollower(nickname) {
+  const { error } = await supabase.rpc("remove_follower", { target: nickname });
+  if (error) throw error;
+}
+export async function getMyFollowing() {
+  const { data, error } = await supabase
+    .from("my_following").select("*").order("created_at", { ascending: false });
+  if (error) throw error;
+  return data;
+}
+export async function getMyFollowers() {
+  const { data, error } = await supabase
+    .from("my_followers").select("*").order("created_at", { ascending: false });
+  if (error) throw error;
+  return data;
+}
+
 export async function getReviewsPage({ sort = "recent", offset = 0, limit = 20 }) {
-  let query = supabase.from("public_reviews").select("*");
+  let query = supabase
+    .from(sort === "following" ? "following_feed" : "public_reviews")
+    .select("*");
   if (sort === "liked") {
     query = query
       .gt("like_count", 0)

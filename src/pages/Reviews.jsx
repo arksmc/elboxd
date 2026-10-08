@@ -75,14 +75,21 @@ export default function Reviews() {
         <button className={sort === "liked" ? "tab on" : "tab"} onClick={() => setSort("liked")}>
           Most liked
         </button>
+        {user && (
+  <button className={sort === "following" ? "tab on" : "tab"} onClick={() => setSort("following")}>
+    Following
+  </button>
+)}
       </div>
 
       {loading ? (
         <p className="muted">Loading...</p>
       ) : reviews.length === 0 ? (
         <p className="banner">
-          {sort === "liked" ? "No liked reviews yet." : "No reviews yet."}
-        </p>
+  {sort === "following" ? (
+    <>Follow people to see their reviews here. <Link to="/people"><b>Find people</b></Link></>
+  ) : sort === "liked" ? "No liked reviews yet." : "No reviews yet."}
+</p>
       ) : (
         <ul className="review-list">
           {reviews.map((r) => {

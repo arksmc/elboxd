@@ -555,3 +555,6 @@ html, body { max-width: 100%; overflow-x: hidden; }
 
 .reply { background: var(--bg); border-left: 3px solid var(--accent); padding: 0.5rem 0.75rem; border-radius: 4px; }
 .review .form select { background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem; font: inherit; }
+
+.person-row { display: flex; justify-content: space-between; align-items: center; }
+.btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
