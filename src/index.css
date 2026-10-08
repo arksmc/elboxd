@@ -609,3 +609,19 @@ html, body { max-width: 100%; overflow-x: hidden; }
 }
 
 .avatar-btn-cent { background: #2f2f30; border: 2px solid #fff; box-shadow: 0 0 8px rgba(255, 255, 255, 0.35); }
+
+/* Cent: white border and glow on the People card */
+.card.person.person-cent {
+  border: 1px solid #fff;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25), 0 0 16px rgba(255, 255, 255, 0.3);
+}
+.card.person.person-cent:hover {
+  border-color: #fff;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4), 0 0 22px rgba(255, 255, 255, 0.45);
+}
+.person-cent .avatar-sm {
+  background: #2f2f30;
+  border: 2px solid #fff;
+  color: #fff;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2), 0 0 14px rgba(255, 255, 255, 0.35);
+}
