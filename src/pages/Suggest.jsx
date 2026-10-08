@@ -59,6 +59,11 @@ export default function Suggest() {
   }
 }
 
+function closePopup() {
+  setName(""); setArea(""); setOtherArea(""); setCategory(""); setNote("");
+  setStatus("idle");
+}
+
   if (loading) return <p className="muted">Loading...</p>;
 
   if (status === "done")
@@ -129,6 +134,21 @@ export default function Suggest() {
   <p className="error">
     This is taking too long. It may not have gone through, so refresh the page and try again.
   </p>
+  
+)}{status === "done" && (
+  <div className="popup-backdrop" role="dialog" aria-modal="true">
+    <div className="popup">
+      <div className="popup-icon">✓</div>
+      <h2>Suggestion received</h2>
+      <p className="muted">Thanks! We'll review it and add it soon.</p>
+      <div className="form-actions">
+        <Link to="/eateries" className="btn">Back to eateries</Link>
+        <button className="link-btn" type="button" onClick={closePopup}>
+          Suggest another
+        </button>
+      </div>
+    </div>
+  </div>
 )}
           <button className="btn" type="submit" disabled={status === "sending"}>
             {status === "sending" ? "Sending..." : "Submit suggestion"}
