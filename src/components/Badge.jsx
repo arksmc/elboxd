@@ -1,4 +1,4 @@
-const SWAP = ["lori", "iesou"];
+const SWAP = ["lori", "iesou", "cent"];
 
 export default function Badge({ code, emoji, label, full = false }) {
   if (!code) return null;
