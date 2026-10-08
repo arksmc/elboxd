@@ -12,6 +12,7 @@ import Suggest from "./pages/Suggest";
 import Admin from "./pages/Admin";
 import People from "./pages/People";
 import Reviews from "./pages/Reviews";
+import Feedback from "./pages/Feedback";
 
 
 export default function App() {
