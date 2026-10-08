@@ -29,21 +29,35 @@ export default function Suggest() {
       : [];
 
   async function handleSubmit(e) {
-    e.preventDefault();
-    setStatus("sending");
-    try {
-      await createSuggestion({
-  userId: user.id,
-  name: name.trim(),
-  area: area === "Other" ? otherArea.trim() : area,
-  category,
-  note: note.trim(),
-});
-    } catch (err) {
-      console.error(err);
-      setStatus(err.message?.includes("limit") ? "limit" : "error");
-    }
+  e.preventDefault();
+  if (status === "sending") return;
+  setStatus("sending");
+
+  const timeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("timeout")), 10000)
+  );
+
+  try {
+    await Promise.race([
+      createSuggestion({
+        userId: user.id,
+        name: name.trim(),
+        area: area === "Other" ? otherArea.trim() : area,
+        category,
+        note: note.trim(),
+      }),
+      timeout,
+    ]);
+    setStatus("done");
+  } catch (err) {
+    console.error(err);
+    setStatus(
+      err.message === "timeout" ? "timeout"
+      : err.message?.includes("limit") ? "limit"
+      : "error"
+    );
   }
+}
 
   if (loading) return <p className="muted">Loading...</p>;
 
@@ -111,6 +125,11 @@ export default function Suggest() {
 
           {status === "error" && <p className="error">Couldn't send. Try again.</p>}
           {status === "limit" && <p className="error">You've hit today's limit of 5 suggestions.</p>}
+          {status === "timeout" && (
+  <p className="error">
+    This is taking too long. It may not have gone through, so refresh the page and try again.
+  </p>
+)}
           <button className="btn" type="submit" disabled={status === "sending"}>
             {status === "sending" ? "Sending..." : "Submit suggestion"}
           </button>

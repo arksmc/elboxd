@@ -271,4 +271,15 @@ create trigger reviews_protect_hidden
 
 -- Make yourself admin (use the email you sign in with)
 insert into admins (user_id)
-select id from auth.users where email = 'YOUR_EMAIL@gmail.com';
+select id from auth.users where email = 'markcascara70@gmail.com';
+
+create or replace function limit_suggestions() returns trigger
+language plpgsql security definer set search_path = public as $$
+begin
+  if (select count(*) from suggestions
+      where user_id = new.user_id and created_at > now() - interval '1 day') >= 5 then
+    raise exception 'Daily suggestion limit reached';
+  end if;
+  return new;
+end;
+$$;
