@@ -587,3 +587,30 @@ html, body { max-width: 100%; overflow-x: hidden; }
   .profile-actions { grid-area: actions; justify-self: end; margin-left: 0; }
   .profile-info { grid-area: info; }
 }
+
+/* Header and footer gradients */
+.site-header {
+  background: linear-gradient(90deg, #4a0c22 0%, #6b1231 50%, #8a1a41 100%);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+.site-footer {
+  background: linear-gradient(90deg, #00402a 0%, #00593b 50%, #00724b 100%);
+}
+
+/* Softer cards: lift and an accent edge on hover */
+.card, .review { transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s; }
+.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+/* Tiles: a little depth */
+.tile { box-shadow: inset 0 -30px 40px rgba(0, 0, 0, 0.25); }
+.mini:hover .tile { transform: translateY(-2px); transition: transform 0.15s; }
+
+/* Hero: a soft maroon glow behind the search */
+.hero { background: radial-gradient(ellipse at top, rgba(107, 18, 49, 0.35), transparent 70%); border-radius: 12px; }
+
+/* Smoother buttons */
+.btn { transition: transform 0.1s, opacity 0.15s; }
+.btn:active { transform: scale(0.97); }
+
+/* Readable errors on dark */
+.error { color: #ff6b6b; }
