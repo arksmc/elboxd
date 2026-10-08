@@ -3,12 +3,13 @@ import { useParams, Link } from "react-router-dom";
 import {
   getEateries,
   getEateryBySlug,
-  getReviewsByEateryId,
   getMyProfile,
   upsertReview,
   getMyReview,
   deleteMyReview,
   getMyLikes,
+  getEateryReviewsPage,
+  getRatingCounts
 } from "../lib/api";
 import ReviewList from "../components/ReviewList";
 import ReviewForm from "../components/ReviewForm";
@@ -17,9 +18,9 @@ import NicknameForm from "../components/NicknameForm";
 import StarRating from "../components/StarRating";
 import Meta from "../components/Meta";
 import useUser from "../lib/useUser";
-import { getAverage, getDistribution } from "../lib/ratings";
 
 const label = (e) => (e.branch ? `${e.name} ${e.branch}` : e.name);
+const PAGE = 20;
 
 export default function EateryPage() {
   const { slug } = useParams();
@@ -34,6 +35,8 @@ export default function EateryPage() {
   const [profileLoaded, setProfileLoaded] = useState(false);
   const [myReview, setMyReview] = useState(null);
   const [myLikes, setMyLikes] = useState(new Set());
+  const [counts, setCounts] = useState({});
+ const [loadingMore, setLoadingMore] = useState(false);
 
   // 2. then effects
   useEffect(() => {
@@ -47,7 +50,7 @@ export default function EateryPage() {
       setNickname(p?.nickname ?? null);
       setProfileLoaded(true);
     });
-  }, [user]);
+  }, [user?.id]);
 
   useEffect(() => {
     if (!user || !eatery) {
@@ -55,7 +58,7 @@ export default function EateryPage() {
       return;
     }
     getMyReview(eatery.id, user.id).then(setMyReview).catch(console.error);
-  }, [user, eatery]);
+  }, [user?.id, eatery?.id]);
 
   useEffect(() => {
     let isMounted = true;
@@ -70,11 +73,18 @@ export default function EateryPage() {
         setEatery(eateryData);
         setAll(allData);
         if (eateryData) {
-          const r = await getReviewsByEateryId(eateryData.id);
-          if (isMounted) setReviews(r);
-        } else {
-          setReviews([]);
-        }
+  const [r, c] = await Promise.all([
+    getEateryReviewsPage(eateryData.id, 0, PAGE),
+    getRatingCounts(eateryData.id),
+  ]);
+  if (isMounted) {
+    setReviews(r);
+    setCounts(c);
+  }
+} else {
+  setReviews([]);
+  setCounts({});
+}
       } catch (err) {
         console.error("Failed to load eatery details:", err);
       } finally {
@@ -91,16 +101,40 @@ export default function EateryPage() {
     return;
   }
   getMyLikes(user.id).then(setMyLikes).catch(console.error);
-}, [user]);
+}, [user?.id]);
 
   // 3. early returns only after every hook
   if (loading) return <p>Loading...</p>;
   if (!eatery) return <p>Eatery not found. <Link to="/" className="back">Back home</Link></p>;
 
+  async function reload() {
+  const [r, c] = await Promise.all([
+    getEateryReviewsPage(eatery.id, 0, PAGE),
+    getRatingCounts(eatery.id),
+  ]);
+  setReviews(r);
+  setCounts(c);
+}
+
+async function loadMore() {
+  setLoadingMore(true);
+  try {
+    const r = await getEateryReviewsPage(eatery.id, reviews.length, PAGE);
+    setReviews((prev) => [...prev, ...r]);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoadingMore(false);
+  }
+}
   const title = label(eatery);
-  const average = getAverage(reviews);
-  const dist = getDistribution(reviews);
-  const max = Math.max(1, ...Object.values(dist));
+  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+const average = total
+  ? Math.round((Object.entries(counts).reduce((s, [k, n]) => s + Number(k) * n, 0) / total) * 10) / 10
+  : null;
+const dist = {};
+[5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5].forEach((n) => { dist[n] = counts[n] ?? 0; });
+const max = Math.max(1, ...Object.values(dist));
 
   const others = all.filter((e) => e.id !== eatery.id);
   const branches = others.filter((e) => e.chain && e.chain === eatery.chain);
@@ -111,7 +145,7 @@ export default function EateryPage() {
   async function handleAddReview({ rating, body }) {
     try {
       await upsertReview({ eateryId: eatery.id, userId: user.id, rating, body });
-      setReviews(await getReviewsByEateryId(eatery.id));
+     await reload();
       setMyReview({ rating, body });
     } catch (err) {
       console.error(err);
@@ -123,7 +157,7 @@ export default function EateryPage() {
     if (!window.confirm("Delete your review?")) return;
     try {
       await deleteMyReview(eatery.id, user.id);
-      setReviews(await getReviewsByEateryId(eatery.id));
+     await reload();
       setMyReview(null);
     } catch (err) {
       console.error(err);
@@ -163,7 +197,7 @@ export default function EateryPage() {
           <div className="tile tile-lg desk-only">{eatery.name[0]}</div>
           <div className="stats">
             <span><b>{average ?? "–"}</b> average</span>
-            <span><b>{reviews.length}</b> reviews</span>
+            <span><b>{total}</b> reviews</span>
           </div>
           <div className="side-box">
             <p className="muted">{eatery.area} · {eatery.category}</p>
@@ -216,6 +250,11 @@ export default function EateryPage() {
 
           <div className="section-head"><h2>Recent reviews</h2></div>
           <ReviewList reviews={reviews} canReport={Boolean(user)} likedIds={myLikes} />
+{reviews.length < total && (
+  <button className="btn load-more" onClick={loadMore} disabled={loadingMore}>
+    {loadingMore ? "Loading..." : "Load more reviews"}
+  </button>
+)}
 
           {branches.length > 0 && (
             <>

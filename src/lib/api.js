@@ -379,3 +379,20 @@ export async function updateTopic(id, { status, reply }) {
   }).eq("id", id);
   if (error) throw error;
 }
+
+export async function getEateryReviewsPage(eateryId, offset = 0, limit = 20) {
+  const { data, error } = await supabase
+    .from("public_reviews").select("*")
+    .eq("eatery_id", eateryId)
+    .order("created_at", { ascending: false })
+    .range(offset, offset + limit - 1);
+  if (error) throw error;
+  return data;
+}
+
+export async function getRatingCounts(eateryId) {
+  const { data, error } = await supabase
+    .from("eatery_rating_counts").select("rating, n").eq("eatery_id", eateryId);
+  if (error) throw error;
+  return Object.fromEntries(data.map((r) => [Number(r.rating), r.n]));
+}
