@@ -162,14 +162,13 @@ export default function EateryPage() {
         <aside className="detail-side">
           <div className="tile tile-lg desk-only">{eatery.name[0]}</div>
           <div className="stats">
-            <span><b>{average ?? "–"}</b> avg</span>
+            <span><b>{average ?? "–"}</b> average</span>
             <span><b>{reviews.length}</b> reviews</span>
           </div>
           <div className="side-box">
             <p className="muted">{eatery.area} · {eatery.category}</p>
             {eatery.status !== "open" && <p className="notice">Currently closed</p>}
             <a href="#write" className="pill block">Write a review</a>
-            <button className="btn-disabled" disabled>Want to try (soon)</button>
           </div>
         </aside>
 
