@@ -149,8 +149,18 @@ export default function EateryPage() {
       <div className="banner-hero" />
 
       <div className="detail">
+        <div className="mobile-head">
+  <div className="tile tile-lg">{eatery.name[0]}</div>
+  <div>
+    <h1>{title}</h1>
+    <div className="pills">
+      <span className="tag">{eatery.area}</span>
+      <span className="tag">{eatery.category}</span>
+    </div>
+  </div>
+</div>
         <aside className="detail-side">
-          <div className="tile tile-lg">{eatery.name[0]}</div>
+          <div className="tile tile-lg desk-only">{eatery.name[0]}</div>
           <div className="stats">
             <span><b>{average ?? "–"}</b> avg</span>
             <span><b>{reviews.length}</b> reviews</span>
@@ -164,12 +174,12 @@ export default function EateryPage() {
         </aside>
 
         <div className="detail-main">
-          <Link to="/eateries" className="back">← All eateries</Link>
-          <h1>{title}</h1>
-          <div className="pills">
-            <span className="tag">{eatery.area}</span>
-            <span className="tag">{eatery.category}</span>
-          </div>
+  <Link to="/eateries" className="back">← All eateries</Link>
+  <h1 className="desk-only">{title}</h1>
+  <div className="pills desk-only">
+    <span className="tag">{eatery.area}</span>
+    <span className="tag">{eatery.category}</span>
+  </div>
 
           <div className="rating-panel">
             <div className="big-score">

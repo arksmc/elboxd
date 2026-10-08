@@ -502,3 +502,13 @@ html, body { max-width: 100%; overflow-x: hidden; }
   .row-cap { grid-template-columns: repeat(5, 1fr); }
   .row-cap > :nth-child(n + 6) { display: none; }
 }
+
+.mobile-head { display: none; }
+
+@media (max-width: 700px) {
+  .mobile-head { display: flex; align-items: center; gap: 1rem; }
+  .mobile-head .tile { width: clamp(72px, 24vw, 100px); flex-shrink: 0; }
+  .mobile-head h1 { margin: 0 0 0.4rem; font-size: 1.3rem; }
+  .mobile-head .pills { margin-bottom: 0; flex-wrap: wrap; }
+  .desk-only { display: none; }
+}
