@@ -1,3 +1,4 @@
+```jsx
 import Meta from "../components/Meta";
 import "../styles/legal.css";
 
@@ -11,12 +12,20 @@ export default function Privacy() {
       <h2>What We Collect</h2>
 
       <p>
-        When you sign in with Google, we receive your email address and name.
-        They're stored securely for authentication and are never shown publicly.
+        When you sign in with Google, Vouch receives the basic account
+        information provided by Google for sign-in, such as your name and email
+        address. Vouch does not access your Gmail, Google Drive, or other Google
+        services.
       </p>
 
       <p>
-        Your account may also store your nickname, date joined, selected top 4,
+        Your email address and name are used to create and identify your Vouch
+        account. They are not shown publicly and are not used as your public
+        identity on the site.
+      </p>
+
+      <p>
+        Your account may also store your nickname, date joined, selected Top 4,
         reviews, ratings, review dates, and likes. You can edit or delete your
         own reviews.
       </p>
@@ -24,27 +33,41 @@ export default function Privacy() {
       <h2>What Others Can See</h2>
 
       <p>
-        Your reviews are shown under the nickname you choose. Other users can't
-        see who you are.
+        Your reviews are shown under the nickname you choose. Other users
+        cannot see your Google name or email address.
       </p>
 
       <p>
         Other users can see your nickname, reviews, ratings, review dates,
-        likes received on your reviews, and selected top 4. They cannot see
+        likes received on your reviews, and selected Top 4. They cannot see
         your Google name, email address, or which reviews you have liked.
+      </p>
+
+      <h2>Why We Require Sign-In</h2>
+
+      <p>
+        You can browse Vouch and read reviews without an account.
+      </p>
+
+      <p>
+        Google sign-in is required for actions that need an account, such as
+        posting reviews and interacting with other users. This allows Vouch to
+        associate reviews and other activity with an account while keeping your
+        Google identity private from other users.
       </p>
 
       <h2>Moderation</h2>
 
       <p>
-        The site admin can technically see which account wrote a review. This
-        information is used only for moderation and handling reports.
+        The site administrator can technically see which account is associated
+        with a review. This information is used for moderation and handling
+        reports.
       </p>
 
       <p>
-        The site administrator may delete reviews or accounts when necessary
-        for moderation. Account deletion is handled manually through the
-        site's database.
+        The site administrator may hide or delete reviews when necessary for
+        moderation. Accounts may also be deleted when necessary. Account
+        deletion is handled manually through the site's database.
       </p>
 
       <h2>Services We Use</h2>
@@ -73,3 +96,4 @@ export default function Privacy() {
     </main>
   );
 }
+```
