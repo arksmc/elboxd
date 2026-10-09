@@ -37,6 +37,7 @@ export default function EateryPage() {
   const [myLikes, setMyLikes] = useState(new Set());
   const [counts, setCounts] = useState({});
  const [loadingMore, setLoadingMore] = useState(false);
+ const [page, setPage] = useState(0);
 
   // 2. then effects
   useEffect(() => {
@@ -64,6 +65,7 @@ export default function EateryPage() {
     let isMounted = true;
     async function loadData() {
       setLoading(true);
+      setPage(0);
       try {
         const [eateryData, allData] = await Promise.all([
           getEateryBySlug(slug),
@@ -107,25 +109,27 @@ export default function EateryPage() {
   if (loading) return <p>Loading...</p>;
   if (!eatery) return <p>Eatery not found. <Link to="/" className="back">Back home</Link></p>;
 
-  async function reload() {
-  const [r, c] = await Promise.all([
-    getEateryReviewsPage(eatery.id, 0, PAGE),
-    getRatingCounts(eatery.id),
-  ]);
-  setReviews(r);
-  setCounts(c);
-}
-
-async function loadMore() {
+  async function goPage(p) {
   setLoadingMore(true);
   try {
-    const r = await getEateryReviewsPage(eatery.id, reviews.length, PAGE);
-    setReviews((prev) => [...prev, ...r]);
+    const r = await getEateryReviewsPage(eatery.id, p * PAGE, PAGE);
+    setReviews(r);
+    setPage(p);
+    document.getElementById("write")?.scrollIntoView({ behavior: "smooth" });
   } catch (err) {
     console.error(err);
   } finally {
     setLoadingMore(false);
   }
+}
+
+async function reload() {
+  const [r, c] = await Promise.all([
+    getEateryReviewsPage(eatery.id, page * PAGE, PAGE),
+    getRatingCounts(eatery.id),
+  ]);
+  setReviews(r);
+  setCounts(c);
 }
   const title = label(eatery);
   const total = Object.values(counts).reduce((a, b) => a + b, 0);
@@ -250,10 +254,16 @@ const max = Math.max(1, ...Object.values(dist));
 
           <div className="section-head"><h2>Recent reviews</h2></div>
           <ReviewList reviews={reviews} canReport={Boolean(user)} likedIds={myLikes} />
-{reviews.length < total && (
-  <button className="btn load-more" onClick={loadMore} disabled={loadingMore}>
-    {loadingMore ? "Loading..." : "Load more reviews"}
-  </button>
+{total > PAGE && (
+  <div className="pager">
+    <button className="btn" onClick={() => goPage(page - 1)} disabled={page === 0 || loadingMore}>
+      ← Previous
+    </button>
+    <span className="muted">Page {page + 1} of {Math.ceil(total / PAGE)}</span>
+    <button className="btn" onClick={() => goPage(page + 1)} disabled={(page + 1) * PAGE >= total || loadingMore}>
+      Next →
+    </button>
+  </div>
 )}
 
           {branches.length > 0 && (

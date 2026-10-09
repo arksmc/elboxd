@@ -19,8 +19,8 @@ export default function Reviews() {
   const [eateries, setEateries] = useState([]);
   const [myLikes, setMyLikes] = useState(new Set());
   const [loading, setLoading] = useState(true);
-  const [more, setMore] = useState(false);
-  const [done, setDone] = useState(false);
+  const [page, setPage] = useState(0);
+  const [hasNext, setHasNext] = useState(false);
 
   useEffect(() => {
     getEateries().then(setEateries).catch(console.error);
@@ -33,33 +33,20 @@ export default function Reviews() {
 
   // Reload from the start whenever the tab changes
   useEffect(() => {
-    let live = true;
-    setLoading(true);
-    setReviews([]);
-    setDone(false);
-    getReviewsPage({ sort, offset: 0, limit: PAGE })
-      .then((r) => {
-        if (!live) return;
-        setReviews(r);
-        setDone(r.length < PAGE);
-      })
-      .catch(console.error)
-      .finally(() => live && setLoading(false));
-    return () => { live = false; };
-  }, [sort]);
-
-  async function loadMore() {
-    setMore(true);
-    try {
-      const r = await getReviewsPage({ sort, offset: reviews.length, limit: PAGE });
-      setReviews((prev) => [...prev, ...r]);
-      setDone(r.length < PAGE);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setMore(false);
-    }
-  }
+  let live = true;
+  setLoading(true);
+  // ask for one extra row so we know whether a next page exists
+  getReviewsPage({ sort, offset: page * PAGE, limit: PAGE + 1 })
+    .then((r) => {
+      if (!live) return;
+      setHasNext(r.length > PAGE);
+      setReviews(r.slice(0, PAGE));
+    })
+    .catch(console.error)
+    .finally(() => live && setLoading(false));
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  return () => { live = false; };
+}, [sort, page]);
 
   const byId = Object.fromEntries(eateries.map((e) => [e.id, e]));
 
@@ -69,14 +56,14 @@ export default function Reviews() {
       <h1>Reviews</h1>
 
       <div className="tabs">
-        <button className={sort === "recent" ? "tab on" : "tab"} onClick={() => setSort("recent")}>
+        <button className={sort === "recent" ? "tab on" : "tab"} onClick={() => { setSort("recent"); setPage(0); }}>
           Recent
         </button>
-        <button className={sort === "liked" ? "tab on" : "tab"} onClick={() => setSort("liked")}>
+        <button className={sort === "liked" ? "tab on" : "tab"} onClick={() => { setSort("liked"); setPage(0); }}>
           Most liked
         </button>
         {user && (
-  <button className={sort === "following" ? "tab on" : "tab"} onClick={() => setSort("following")}>
+  <button className={sort === "following" ? "tab on" : "tab"} onClick={() => { setSort("following"); setPage(0); }}>
     Following
   </button>
 )}
@@ -129,11 +116,17 @@ export default function Reviews() {
         </ul>
       )}
 
-      {!loading && reviews.length > 0 && !done && (
-        <button className="btn load-more" onClick={loadMore} disabled={more}>
-          {more ? "Loading..." : "Load more"}
-        </button>
-      )}
+      {!loading && (page > 0 || hasNext) && (
+  <div className="pager">
+    <button className="btn" onClick={() => setPage(page - 1)} disabled={page === 0}>
+      ← Previous
+    </button>
+    <span className="muted">Page {page + 1}</span>
+    <button className="btn" onClick={() => setPage(page + 1)} disabled={!hasNext}>
+      Next →
+    </button>
+  </div>
+)}
     </main>
   );
 }
