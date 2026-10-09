@@ -1,1 +1,8 @@
+  {
+  "redirects": [
+    { "source": "/privacy", "destination": "/privacy.html", "permanent": true },
+    { "source": "/terms", "destination": "/terms.html", "permanent": true }
+  ],
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+}
   { "rewrites": [{ "source": "/(.*)", "destination": "/" }] }

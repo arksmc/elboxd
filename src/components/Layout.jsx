@@ -128,7 +128,7 @@ export default function Layout({ children }) {
           <span className="muted">
             Student-made · Not affiliated with UPLB
             <br />
-            <Link to="/privacy">Privacy Policy</Link> · <Link to="/terms">Terms</Link> · <Link to="/feedback">Feedback</Link>
+            <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <Link to="/feedback">Feedback</Link>
           </span>
         </div>
       </footer>
