@@ -396,3 +396,13 @@ export async function getRatingCounts(eateryId) {
   if (error) throw error;
   return Object.fromEntries(data.map((r) => [Number(r.rating), r.n]));
 }
+
+export async function deleteEatery(id) {
+  const { error } = await supabase.from("eateries").delete().eq("id", id);
+  if (error) throw error;
+}
+
+export async function setEateryStatus(id, status) {
+  const { error } = await supabase.from("eateries").update({ status }).eq("id", id);
+  if (error) throw error;
+}

@@ -4,6 +4,7 @@ import useUser from "../lib/useUser";
 import {
   checkIsAdmin, getOpenSuggestions, getOpenReports, getEateries,
   addEatery, setSuggestionStatus, setReportStatus, hideReview, getAllFeedback, getTopics, createTopic, assignFeedback, updateTopic,
+  deleteEatery, setEateryStatus
 } from "../lib/api";
 import Meta from "../components/Meta";
 
@@ -197,6 +198,70 @@ function FeedbackAdmin() {
   );
 }
 
+function EateryManager({ eateries, onDone }) {
+  const [q, setQ] = useState("");
+  const list = eateries
+    .filter((e) => label(e).toLowerCase().includes(q.trim().toLowerCase()))
+    .slice(0, 15);
+
+  async function handleDelete(e) {
+    const typed = window.prompt(
+      `This permanently deletes ${label(e)} and ALL its reviews.\nType the name to confirm:`
+    );
+    if (typed === null) return;
+    if (typed.trim().toLowerCase() !== label(e).toLowerCase()) {
+      alert("Name didn't match. Nothing was deleted.");
+      return;
+    }
+    try {
+      await deleteEatery(e.id);
+      onDone();
+    } catch (err) {
+      console.error(err);
+      alert("Couldn't delete it.");
+    }
+  }
+
+  async function toggleClosed(e) {
+    try {
+      await setEateryStatus(e.id, e.status === "closed" ? "open" : "closed");
+      onDone();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  return (
+    <>
+      <div className="section-head"><h2>Manage eateries</h2></div>
+      <input
+        className="search"
+        placeholder="Search eateries..."
+        value={q}
+        onChange={(e) => setQ(e.target.value)}
+      />
+      <ul className="review-list">
+        {list.map((e) => (
+          <li key={e.id} className="review person-row">
+            <span>
+              <strong>{label(e)}</strong>
+              <span className="muted"> · {e.area}{e.status === "closed" ? " · closed" : ""}</span>
+            </span>
+            <span className="form-actions">
+              <button className="link-btn" onClick={() => toggleClosed(e)}>
+                {e.status === "closed" ? "Reopen" : "Close"}
+              </button>
+              <button className="link-btn danger" onClick={() => handleDelete(e)}>
+                Delete
+              </button>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}
+
 export default function Admin() {
   const { user, loading } = useUser();
   const [ok, setOk] = useState(null);
@@ -244,6 +309,7 @@ export default function Admin() {
       )}
 
       <FeedbackAdmin />
+      <EateryManager eateries={eateries} onDone={load} />
     </main>
   );
 }
