@@ -435,3 +435,8 @@ export async function markAllNotificationsRead() {
     .from("notifications").update({ read: true }).eq("read", false);
   if (error) throw error;
 }
+
+export async function clearNotifications() {
+  const { error } = await supabase.from("notifications").delete().gte("id", 0);
+  if (error) throw error;
+}

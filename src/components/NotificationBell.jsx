@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { getUnreadCount, getMyNotifications, markAllNotificationsRead } from "../lib/api";
+import { getUnreadCount, getMyNotifications, markAllNotificationsRead, clearNotifications } from "../lib/api";
 import { formatDate } from "../lib/format";
 
 export default function NotificationBell({ userId }) {
@@ -49,6 +49,16 @@ export default function NotificationBell({ userId }) {
     }
   }
 
+  async function clearAll() {
+  try {
+    await clearNotifications();
+    setItems([]);
+    setCount(0);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
   return (
     <div className="bell-wrap" ref={ref}>
       <button className="bell-btn" onClick={toggle} aria-label="Notifications" aria-expanded={open}>
@@ -62,7 +72,12 @@ export default function NotificationBell({ userId }) {
 
       {open && (
         <div className="notif-menu">
-          <p className="menu-name">Notifications</p>
+          <div className="notif-head">
+  <p className="menu-name">Notifications</p>
+  {items.length > 0 && (
+    <button className="notif-clear" onClick={clearAll}>Clear all</button>
+  )}
+</div>
           {loading ? (
             <p className="muted notif-empty">Loading...</p>
           ) : items.length === 0 ? (
