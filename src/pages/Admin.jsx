@@ -4,7 +4,7 @@ import useUser from "../lib/useUser";
 import {
   checkIsAdmin, getOpenSuggestions, getOpenReports, getEateries,
   addEatery, setSuggestionStatus, setReportStatus, hideReview, getAllFeedback, getTopics, createTopic, assignFeedback, updateTopic,
-  deleteEatery, setEateryStatus
+  deleteEatery, setEateryStatus, approveSuggestion,
 } from "../lib/api";
 import Meta from "../components/Meta";
 
@@ -23,26 +23,25 @@ function SuggestionRow({ s, onDone }) {
   const slug = slugify(`${f.name} ${f.branch}`);
 
   async function add(e) {
-    e.preventDefault();
-    try {
-      const tags = f.tags.split(",").map((t) => t.trim()).filter(Boolean);
-      await addEatery({
-        slug,
-        name: f.name.trim(),
-        branch: f.branch.trim() || null,
-        chain: f.branch.trim() ? f.name.trim() : null,
-        area: f.area.trim(),
-        category: f.category.trim(),
-        tags: tags.length ? tags : null,
-        status: "open",
-      });
-      await setSuggestionStatus(s.id, "added");
-      onDone();
-    } catch (error) {
-      console.error(error);
-      setErr(error.code === "23505" ? "That slug already exists." : "Couldn't add it.");
-    }
+  e.preventDefault();
+  try {
+    const tags = f.tags.split(",").map((t) => t.trim()).filter(Boolean);
+    await approveSuggestion({
+      id: s.id,
+      slug,
+      name: f.name.trim(),
+      branch: f.branch.trim() || null,
+      chain: f.branch.trim() ? f.name.trim() : null,
+      area: f.area.trim(),
+      category: f.category.trim(),
+      tags: tags.length ? tags : null,
+    });
+    onDone();
+  } catch (error) {
+    console.error(error);
+    setErr(error.code === "23505" ? "That slug already exists." : "Couldn't add it.");
   }
+}
 
   return (
     <li className="review">

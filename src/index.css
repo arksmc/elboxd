@@ -625,3 +625,25 @@ html, body { max-width: 100%; overflow-x: hidden; }
 
 .pager { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-top: 1.25rem; }
 .pager .btn:disabled { opacity: 0.35; }
+
+.bell-wrap { position: relative; }
+.bell-btn {
+  position: relative; background: none; border: 0; color: #fff; cursor: pointer;
+  width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; padding: 0;
+}
+.bell-btn:hover { background: rgba(255, 255, 255, 0.15); }
+.bell-dot {
+  position: absolute; top: 0; right: -2px; min-width: 16px; height: 16px; padding: 0 4px;
+  border-radius: 999px; background: #ff6b6b; color: #fff; font-size: 0.65rem; font-weight: 800;
+  display: grid; place-items: center; line-height: 1;
+}
+.notif-menu {
+  position: absolute; right: 0; top: calc(100% + 0.5rem);
+  width: min(320px, calc(100vw - 2rem)); max-height: 60vh; overflow-y: auto;
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45); padding: 0.35rem; z-index: 30;
+}
+.notif { display: flex; flex-direction: column; gap: 0.2rem; padding: 0.6rem 0.7rem; border-radius: 6px; font-size: 0.9rem; }
+a.notif:hover { background: var(--accent-soft); }
+.notif.unread { background: rgba(30, 158, 106, 0.12); border-left: 3px solid var(--accent); }
+.notif-empty { padding: 0.6rem 0.7rem; margin: 0; }

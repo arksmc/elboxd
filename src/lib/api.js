@@ -406,3 +406,32 @@ export async function setEateryStatus(id, status) {
   const { error } = await supabase.from("eateries").update({ status }).eq("id", id);
   if (error) throw error;
 }
+
+export async function approveSuggestion({ id, slug, name, branch, chain, area, category, tags }) {
+  const { error } = await supabase.rpc("approve_suggestion", {
+    p_suggestion_id: id, p_slug: slug, p_name: name, p_branch: branch,
+    p_chain: chain, p_area: area, p_category: category, p_tags: tags,
+  });
+  if (error) throw error;
+}
+
+export async function getUnreadCount() {
+  const { count, error } = await supabase
+    .from("notifications").select("id", { count: "exact", head: true }).eq("read", false);
+  if (error) throw error;
+  return count ?? 0;
+}
+
+export async function getMyNotifications(limit = 20) {
+  const { data, error } = await supabase
+    .from("notifications").select("*")
+    .order("created_at", { ascending: false }).limit(limit);
+  if (error) throw error;
+  return data;
+}
+
+export async function markAllNotificationsRead() {
+  const { error } = await supabase
+    .from("notifications").update({ read: true }).eq("read", false);
+  if (error) throw error;
+}

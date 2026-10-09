@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import useUser from "../lib/useUser";
 import { signOut, getMyProfile, checkIsAdmin, getBadgesByNickname } from "../lib/api";
+import NotificationBell from "./NotificationBell";
 
 export default function Layout({ children }) {
   const { user, loading } = useUser();
@@ -76,41 +77,44 @@ export default function Layout({ children }) {
           </nav>
 
           {!loading && (user ? (
-            <div className="user-menu" ref={menuRef}>
-              <button
-                className={"avatar-btn" + (badge ? ` avatar-btn-${badge}` : "")}
-                onClick={() => (open ? close() : setOpen(true))}
-                aria-haspopup="menu"
-                aria-expanded={open}
-                aria-label="Account menu"
-              >
-                {initial}
-              </button>
-              {open && (
-                <div className="menu" role="menu">
-                  {nick && <p className="menu-name">{nick}</p>}
-                  {nick && (
-                    <Link role="menuitem" to={`/u/${encodeURIComponent(nick)}`} onClick={close}>
-                      My profile
-                    </Link>
-                  )}
-                  {isAdmin && (
-                    <Link role="menuitem" to="/admin" onClick={close}>Admin</Link>
-                  )}
-                  <Link role="menuitem" to="/feedback" onClick={close}>Send feedback</Link>
-                  <button
-                    role="menuitem"
-                    className={confirming ? "danger" : ""}
-                    onClick={handleSignOut}
-                  >
-                    {confirming ? "Tap again to sign out" : "Sign out"}
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <Link to="/login" className="link-btn">Sign in</Link>
-          ))}
+  <>
+    <NotificationBell userId={user.id} />
+    <div className="user-menu" ref={menuRef}>
+      <button
+        className={"avatar-btn" + (badge ? ` avatar-btn-${badge}` : "")}
+        onClick={() => (open ? close() : setOpen(true))}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label="Account menu"
+      >
+        {initial}
+      </button>
+      {open && (
+        <div className="menu" role="menu">
+          {nick && <p className="menu-name">{nick}</p>}
+          {nick && (
+            <Link role="menuitem" to={`/u/${encodeURIComponent(nick)}`} onClick={close}>
+              My profile
+            </Link>
+          )}
+          {isAdmin && (
+            <Link role="menuitem" to="/admin" onClick={close}>Admin</Link>
+          )}
+          <Link role="menuitem" to="/feedback" onClick={close}>Send feedback</Link>
+          <button
+            role="menuitem"
+            className={confirming ? "danger" : ""}
+            onClick={handleSignOut}
+          >
+            {confirming ? "Tap again to sign out" : "Sign out"}
+          </button>
+        </div>
+      )}
+    </div>
+  </>
+) : (
+  <Link to="/login" className="link-btn">Sign in</Link>
+))}
 
           <Link to="/eateries" className="pill">+ REVIEW</Link>
         </div>
