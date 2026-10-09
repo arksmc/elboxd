@@ -10,5 +10,7 @@ h2 { text-align: center; margin: 2rem 0 0.5rem; font-size: 1.2rem; }
 p { margin: 0 0 1rem; }
 .muted { color: #9aa1a8; font-size: 0.9rem; }
 footer { background: linear-gradient(90deg, #00402a, #00593b 50%, #00724b); margin-top: 2rem; }
-footer div { max-width: 800px; margin: 0 auto; padding: 1.2rem 1rem; font-size: 0.85rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+footer div { max-width: 800px; margin: 0 auto; padding: 1.2rem 1rem; font-size: 0.85rem; display: flex; justify-content: right; gap: 1rem; flex-wrap: wrap; }
 footer a { color: #fff; }
+.brand { display: flex; align-items: center; gap: 0.5rem; }
+.logo-img { height: 26px; width: auto; display: block; }
